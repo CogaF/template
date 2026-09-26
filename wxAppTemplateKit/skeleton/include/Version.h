@@ -1,6 +1,8 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
 
 #pragma once
 
@@ -22,20 +24,23 @@
  * (git tag -a v1.2.0 -m "..."), build Release and hand out the versioned exe.
  */
 
+/*! \brief MAJOR: incompatible changes. */
 #define APP_VERSION_MAJOR 0
+/*! \brief MINOR: new features, compatible. */
 #define APP_VERSION_MINOR 1
+/*! \brief PATCH: bug fixes only. */
 #define APP_VERSION_PATCH 0
-//! "rc.N" while testing, "" for the final release.
+/*! \brief "rc.N" while testing, "" for the final release. */
 #define APP_VERSION_PRERELEASE "rc.1"
 
-//! One released (or release-candidate) version; notes: one item per line, "Added:/Changed:/Fixed:/Note:".
+/*! \brief One released (or release-candidate) version; notes: one item per line, "Added:/Changed:/Fixed:/Note:". */
 struct AppVersionHistoryEntry {
-	const char* version;
-	const char* date; // YYYY-MM-DD
-	const char* notes;
+	const char* version; /*!< "0.1.0-rc.1" */
+	const char* date;    /*!< release date, YYYY-MM-DD */
+	const char* notes;   /*!< one item per line */
 };
 
-//! Newest first.
+/*! \brief Newest first. */
 inline constexpr AppVersionHistoryEntry kAppVersionHistory[] = {
 	{ "0.1.0-rc.1", "2026-09-26",
 		"Note: project created from the wxAppTemplate kit." },

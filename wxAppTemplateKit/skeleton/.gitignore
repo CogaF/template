@@ -6,3 +6,5 @@ obj/
 # Written by the build (see the IncrementBuildNumber target)
 BuildCounter.txt
 include/GeneratedBuildInfo.h
+# Doxygen output (run "doxygen" in this folder)
+docs/

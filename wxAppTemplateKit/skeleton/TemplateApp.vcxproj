@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -167,7 +167,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -204,7 +204,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -242,7 +242,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -280,7 +280,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -317,7 +317,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -354,7 +354,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -392,7 +392,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -430,6 +430,9 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\BuildInfo.cpp" />
     <ClCompile Include="src\DataDir.cpp" />
     <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\GuiUtils.cpp" />
+    <ClCompile Include="src\HashUtils.cpp" />
+    <ClCompile Include="src\HexUtils.cpp" />
     <ClCompile Include="src\I18n.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
@@ -437,7 +440,10 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\SerialConfigDialog.cpp" />
     <ClCompile Include="src\SerialLink.cpp" />
     <ClCompile Include="src\SerialWorker.cpp" />
+    <ClCompile Include="src\StatusLed.cpp" />
+    <ClCompile Include="src\TextUtils.cpp" />
     <ClCompile Include="src\Theme.cpp" />
+    <ClCompile Include="src\TimeUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\App.h" />
@@ -446,16 +452,24 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\BuildInfo.h" />
     <ClInclude Include="include\DataDir.h" />
     <ClInclude Include="include\Database.h" />
+    <ClInclude Include="include\GuiUtils.h" />
+    <ClInclude Include="include\HashUtils.h" />
+    <ClInclude Include="include\HexUtils.h" />
     <ClInclude Include="include\I18n.h" />
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\MainWindow.h" />
+    <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\SerialConfig.h" />
     <ClInclude Include="include\SerialConfigDialog.h" />
     <ClInclude Include="include\SerialLink.h" />
     <ClInclude Include="include\SerialWorker.h" />
+    <ClInclude Include="include\StatusLed.h" />
+    <ClInclude Include="include\TextUtils.h" />
     <ClInclude Include="include\Theme.h" />
     <ClInclude Include="include\ThreadUtils.h" />
+    <ClInclude Include="include\TimeUtils.h" />
     <ClInclude Include="include\UVT.h" />
+    <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Version.h" />
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +477,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="languages\language-it.xml" />
+    <None Include="Doxyfile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Build number, git commit and build date -> include\GeneratedBuildInfo.h (gitignored), before

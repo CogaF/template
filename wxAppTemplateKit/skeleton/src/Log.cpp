@@ -1,8 +1,16 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file Log.cpp
+ * \brief Implementation of Log.h.
+ */
 
 #include "Log.h"
+#include "TimeUtils.h"
 
 #include <atomic>
 #include <chrono>
@@ -14,6 +22,9 @@
 #include <thread>
 
 #ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX // std::min/std::max, not the windows.h macros
+#endif
 #include <windows.h>
 #endif
 
@@ -23,21 +34,6 @@ namespace {
 	std::ofstream g_file;
 	std::deque<std::string> g_pending;
 	size_t g_dropped = 0;
-
-	std::string timestamp() {
-		using namespace std::chrono;
-		const auto now = system_clock::now();
-		const auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
-		const std::time_t t = system_clock::to_time_t(now);
-		std::tm tm{};
-#ifdef _WIN32
-		localtime_s(&tm, &t);
-#else
-		localtime_r(&t, &tm);
-#endif
-		return std::format("{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-			tm.tm_hour, tm.tm_min, tm.tm_sec, static_cast<int>(ms.count()));
-	}
 
 	char levelLetter(LogLevel level) {
 		switch (level) {
@@ -84,7 +80,7 @@ void write(LogLevel lvl, const std::string& message) {
 	if (!isEnabled(lvl)) return;
 	std::ostringstream tid;
 	tid << std::this_thread::get_id();
-	const std::string line = std::format("{} [{}] [{}] {}", timestamp(), levelLetter(lvl), tid.str(), message);
+	const std::string line = std::format("{} [{}] [{}] {}", Utils::Time::nowString(), levelLetter(lvl), tid.str(), message);
 
 #ifdef _WIN32
 	OutputDebugStringA((line + "\n").c_str());
@@ -111,18 +107,6 @@ std::vector<std::string> takePendingLines() {
 	}
 	out.insert(out.end(), std::make_move_iterator(g_pending.begin()), std::make_move_iterator(g_pending.end()));
 	g_pending.clear();
-	return out;
-}
-
-std::string hex(const std::vector<unsigned char>& bytes) {
-	static const char* kDigits = "0123456789ABCDEF";
-	std::string out;
-	out.reserve(bytes.size() * 3);
-	for (size_t i = 0; i < bytes.size(); ++i) {
-		if (i) out += ' ';
-		out += kDigits[bytes[i] >> 4];
-		out += kDigits[bytes[i] & 0x0F];
-	}
 	return out;
 }
 

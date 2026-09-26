@@ -1,6 +1,8 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
 
 #pragma once
 
@@ -17,10 +19,18 @@ class wxSpinCtrl;
  * \brief Dialog to pick a port and all its settings. The port box lists the detected ports but also
  * accepts a typed name (a port that is not plugged in right now keeps its setting).
  */
+/*!
+ * \brief Modal dialog editing a SerialConfig (see the file comment).
+ */
 class SerialConfigDialog : public wxDialog {
 public:
+	/*!
+	 * \brief Builds the dialog showing initial.
+	 * \param parent  the owner window.
+	 * \param initial settings shown when the dialog opens.
+	 */
 	SerialConfigDialog(wxWindow* parent, const SerialConfig& initial);
-	//! The edited settings (valid after ShowModal() returned wxID_OK).
+	/*! \brief The edited settings (valid after ShowModal() returned wxID_OK). */
 	SerialConfig config() const;
 
 private:

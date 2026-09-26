@@ -1,6 +1,8 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
 
 #pragma once
 
@@ -18,11 +20,14 @@
  * versions they follow at the next start.
  */
 namespace Theme {
+	/*! \brief The theme saved in AppSettings (true = dark). */
 	bool savedDark();
+	/*! \brief Saves the theme for the next start (true = dark). */
 	void save(bool dark);
 
-	//! Call once in OnInit() before creating any window.
+	/*! \brief Call once in OnInit() before creating any window. */
 	void applyAtStartup();
+	/*! \brief The theme the application started with (true = dark). */
 	bool startupDark();
 
 	/*!
@@ -30,8 +35,8 @@ namespace Theme {
 	 * false if only the application's colours did (restart to apply it completely).
 	 */
 	bool switchNow(bool dark);
-	//! Recolours win (and its children) if a live switch happened this session.
+	/*! \brief Recolours win (and its children) if a live switch happened this session. */
 	void onWindowShown(wxWindow* win);
-	//! Recolours win and its children for the given theme.
+	/*! \brief Recolours win and its children for the given theme. */
 	void applyColours(wxWindow* win, bool dark);
 }

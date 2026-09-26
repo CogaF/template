@@ -24,6 +24,12 @@ Without questions: `powershell -ExecutionPolicy Bypass -File NewProject.ps1 -Nam
 
 The `skeleton\` folder is itself a complete project (`TemplateApp.sln`) that builds as it is.
 
+Checked before release: builds with no warnings (`-Wall -Wextra`, wxWidgets 3.2, Linux); every
+identifier checked against the macros of the Windows SDK headers (MinGW); the parts that include
+`windows.h` cross-compiled for Windows; a self-test of the `Utils` helpers (checksums and SHA-256
+against their published check values, hex/bit/byte-order conversions, time packing, file helpers)
+passes; Doxygen reports no warnings.
+
 ## Builds
 
 | # | Platform | Configuration | wxWidgets | Output |
@@ -59,9 +65,33 @@ Every build:
 | `SerialLink.*` | thread-safe request/reply on one port: timed lock, double input flush for RS-485, read until the frame is complete, abortable |
 | `SerialWorker.*` | background transaction queue; results delivered on the GUI thread |
 | `Database.*` | SQLite RAII wrapper: statements, transactions, WAL mode |
-| `ThreadUtils.h` | `AliveGuard`, `CallLater` (delayed GUI call that is skipped if its window is gone) |
+| `ThreadUtils.h` | `AliveGuard`, `CallLater` (delayed GUI call that is skipped if its window is gone), `WorkerQueue` (background task queue with a GUI-thread continuation) |
+| `StatusLed.*` | coloured status indicator with tooltip, label and click / double-click / right-click events |
 | `SerialConfigDialog.*` | port / baud / format / timeouts dialog |
 | `MainWindow.*`, `App.*` | skeleton window: menus, open/close port, send hex and see the reply, live log, event database, theme / language / log level with Restart now · Use now · Save for next start · Cancel, Version Info, About |
+
+## General-purpose helpers (`Utils.h`)
+
+The successor of the old `pUtl` class, split by topic into small namespaces - include `Utils.h`
+for all of them or just the header you need. Every function is documented (Doxygen).
+
+| Namespace | Header | Highlights |
+|---|---|---|
+| `Utils::Time` | `TimeUtils.h` | monotonic ms/µs clocks, epoch ms, `nowString()` "2026-09-26 14:03:01.123", `fileNameStamp()`, `durationString()` "1d 02:03:04.005", packed timestamps `YYYYMMDDhhmmssmmm` in a `uint64_t` (pack/unpack), `Stopwatch`, `sleepMs/Us` |
+| `Utils::Hex` | `HexUtils.h` | `toHex()` for `uint8_t`...`uint64_t` (width follows the type, optional `0x`), `toBinary()` with digit grouping, `bytesToString()`, `wordsToString()`, `dump()` (offset + hex + ASCII), `parseBytes("55 01 0A")`, `parseNumber("0x1F" / "0b101" / "31")` |
+| `Utils::Bits` | `HexUtils.h` | `isSet/set/clear/toggle/assign`, `mask`, `extract/insert` bit fields, `countOnes`, `lowest/highestSetBit`, `reverse`, `byteSwap`, `readBE/readLE`, `appendBE/appendLE`, float/double <-> IEEE-754 bit patterns |
+| `Utils::Checksum` | `HexUtils.h` | `xor8` (BCC), `sum8`, `twosComplement8`, `crc16Modbus`, `crc16CcittFalse`, `crc32` |
+| `Utils::Str` | `TextUtils.h` | `trim`, `split`, `join`, `toLower/Upper`, `equalsIgnoreCase`, `replaceAll`, `ellipsize`, locale-independent `toInt/toDouble` |
+| `Utils::Files` | `TextUtils.h` | `ensureDirectory`, `sanitizeFileName` (Windows-safe, strips `\\.\` device prefixes), `uniquePath` (never overwrites), `timestampedPath`, `readText`, `writeTextAtomic`, `appendLine`, `size`, `humanSize` |
+| `Utils::Math` | `MathUtils.h` | `mapRange` (value -> pixel, ADC count -> volts), `roundTo`, `nearlyEqual`, `percent`, `divideRoundUp` |
+| `Utils::Hash` | `HashUtils.h` | portable SHA-256 (`sha256`, `sha256Hex`) - no OS crypto API |
+| `Utils::Gui` | `GuiUtils.h` | `padText` (wxString-safe), named colour palette + `colourByIndex`, `setInteractiveEnabled` (whole panels), `appendToConsole` (bounded console that keeps the user's scroll position), debug console window (Windows) |
+
+## Documentation
+
+Every file, class, function and constant carries a Doxygen comment (`/*! \brief ... */`). Run
+`doxygen` in the project folder (the `Doxyfile` is included) and open `docs/html/index.html`; the
+template produces no Doxygen warnings - keep it that way when adding code.
 
 ## Extending it
 

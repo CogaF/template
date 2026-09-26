@@ -177,7 +177,7 @@ Get-ChildItem -Recurse -Force -File $Destination | Where-Object { $_.Name -like 
 $newProjectGuid  = [guid]::NewGuid().ToString().ToUpperInvariant()
 $newSolutionGuid = [guid]::NewGuid().ToString().ToUpperInvariant()
 $textExtensions = @('.h', '.hpp', '.cpp', '.c', '.rc', '.sln', '.vcxproj', '.filters', '.xml', '.md', '.txt', '.gitignore', '.props')
-Get-ChildItem -Recurse -Force -File $Destination | Where-Object { $textExtensions -contains $_.Extension.ToLowerInvariant() -or $_.Name -eq '.gitignore' } | ForEach-Object {
+Get-ChildItem -Recurse -Force -File $Destination | Where-Object { $textExtensions -contains $_.Extension.ToLowerInvariant() -or $_.Name -eq '.gitignore' -or $_.Name -eq 'Doxyfile' } | ForEach-Object {
     $bom = Test-HasBom $_.FullName
     $text = Read-TextFile $_.FullName
     $new = $text.Replace("Copyright (C) $TemplateYear $TemplateHolder", "Copyright (C) $year $Holder")

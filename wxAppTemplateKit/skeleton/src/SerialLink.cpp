@@ -1,19 +1,22 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file SerialLink.cpp
+ * \brief Implementation of SerialLink.h.
+ */
 
 #include "SerialLink.h"
+#include "HexUtils.h"
 #include "Log.h"
+#include "TimeUtils.h"
 
 #include <chrono>
 #include <thread>
 
-namespace {
-	uint64_t nowMs() {
-		using namespace std::chrono;
-		return static_cast<uint64_t>(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
-	}
-}
 
 const char* SerialLink::resultName(Result r) {
 	switch (r) {
@@ -94,13 +97,13 @@ SerialLink::Result SerialLink::transact(const std::vector<uint8_t>& tx, std::vec
 			port_->flushInput();
 		}
 		const size_t written = port_->write(tx.data(), tx.size());
-		if (Log::isEnabled(LogLevel::Trace)) Log::trace("SerialLink TX: " + Log::hex(tx));
+		if (Log::isEnabled(LogLevel::Trace)) Log::trace("SerialLink TX: " + Utils::Hex::bytesToString(tx));
 		if (written != tx.size()) {
 			Log::warning("SerialLink: wrote " + std::to_string(written) + " of " + std::to_string(tx.size()) + " bytes.");
 			return Result::WriteFailed;
 		}
 
-		const uint64_t deadline = nowMs() + static_cast<uint64_t>(timeoutMs > 0 ? timeoutMs : 0);
+		const uint64_t deadline = Utils::Time::nowMonotonicMs() + static_cast<uint64_t>(timeoutMs > 0 ? timeoutMs : 0);
 		const uint64_t quietMs = config_.interByteTimeoutMs > 0 ? config_.interByteTimeoutMs : 10;
 		uint64_t lastByteAt = 0;
 		std::vector<uint8_t> chunk;
@@ -111,7 +114,7 @@ SerialLink::Result SerialLink::transact(const std::vector<uint8_t>& tx, std::vec
 				chunk.clear();
 				port_->read(chunk, avail);
 				rx.insert(rx.end(), chunk.begin(), chunk.end());
-				lastByteAt = nowMs();
+				lastByteAt = Utils::Time::nowMonotonicMs();
 				if (complete) {
 					const size_t frameLen = complete(rx);
 					if (frameLen > 0 && rx.size() >= frameLen) {
@@ -121,17 +124,17 @@ SerialLink::Result SerialLink::transact(const std::vector<uint8_t>& tx, std::vec
 				}
 				continue;
 			}
-			const uint64_t now = nowMs();
+			const uint64_t now = Utils::Time::nowMonotonicMs();
 			// No framing given: the reply is over once the line has been quiet for a while.
 			if (!complete && lastByteAt != 0 && now - lastByteAt >= quietMs) break;
 			if (now >= deadline) {
 				if (Log::isEnabled(LogLevel::Debug))
-					Log::debug("SerialLink: timeout, " + std::to_string(rx.size()) + " byte(s) received: " + Log::hex(rx));
+					Log::debug("SerialLink: timeout, " + std::to_string(rx.size()) + " byte(s) received: " + Utils::Hex::bytesToString(rx));
 				return Result::Timeout;
 			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
-		if (Log::isEnabled(LogLevel::Trace)) Log::trace("SerialLink RX: " + Log::hex(rx));
+		if (Log::isEnabled(LogLevel::Trace)) Log::trace("SerialLink RX: " + Utils::Hex::bytesToString(rx));
 		return Result::Ok;
 	}
 	catch (const std::exception& e) {

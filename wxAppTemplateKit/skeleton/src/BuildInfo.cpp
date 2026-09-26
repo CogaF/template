@@ -1,6 +1,13 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file BuildInfo.cpp
+ * \brief Implementation of BuildInfo.h.
+ */
 
 #include "BuildInfo.h"
 #include "AppInfo.h"
@@ -13,9 +20,9 @@
 #if __has_include("GeneratedBuildInfo.h")
 #include "GeneratedBuildInfo.h"
 #else
-constexpr int BUILD_NUMBER = 0;
-constexpr const char* GIT_DESCRIBE = "unknown";
-constexpr const char* BUILD_DATE = __DATE__ " " __TIME__;
+constexpr int BUILD_NUMBER = 0;                               /*!< fallback: no generated header */
+constexpr const char* GIT_DESCRIBE = "unknown";               /*!< fallback: no generated header */
+constexpr const char* BUILD_DATE = __DATE__ " " __TIME__;     /*!< fallback: compile time of this file */
 #endif
 
 int GetBuildNumber() { return BUILD_NUMBER; }

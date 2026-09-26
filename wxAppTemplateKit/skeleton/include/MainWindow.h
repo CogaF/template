@@ -1,6 +1,8 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
 
 #pragma once
 
@@ -14,6 +16,7 @@
 #include "SerialLink.h"
 #include "SerialWorker.h"
 
+class StatusLed;
 class wxButton;
 class wxStaticText;
 class wxTextCtrl;
@@ -24,9 +27,14 @@ class wxTextCtrl;
  * log, and a small event database - a working starting point showing how the pieces fit together.
  * Replace the centre panel with the real application.
  */
+/*!
+ * \brief The main window (see the file comment).
+ */
 class MainWindow : public wxFrame {
 public:
+	/*! \brief Builds menus and content, opens the event database. */
 	MainWindow();
+	/*! \brief Stops the serial worker and closes the port. */
 	~MainWindow() override;
 
 private:
@@ -47,9 +55,9 @@ private:
 	void onLogTimer(wxTimerEvent&);
 
 	enum class ApplyChoice { RestartNow, UseNow, NextStart, Cancel };
-	//! The "Restart now / Use now / Save for next start / Cancel" question (theme, language).
+	/*! \brief The "Restart now / Use now / Save for next start / Cancel" question (theme, language). */
 	ApplyChoice askHowToApply(const wxString& title);
-	//! Starts a new instance of the exe and closes this one (returns false if it couldn't start).
+	/*! \brief Starts a new instance of the exe and closes this one (returns false if it couldn't start). */
 	bool restartApplication();
 
 	void openPort();
@@ -62,6 +70,7 @@ private:
 	std::unique_ptr<SerialWorker> worker_;
 	Database db_;
 
+	StatusLed* portLed_ = nullptr;
 	wxStaticText* portText_ = nullptr;
 	wxButton* portButton_ = nullptr;
 	wxTextCtrl* sendText_ = nullptr;

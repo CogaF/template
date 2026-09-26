@@ -1,6 +1,8 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
 
 #pragma once
 
@@ -12,21 +14,28 @@
  * (GeneratedBuildInfo.h, rewritten before every build), so a build recompiles one small file.
  */
 
-//! Build number (counts every build on the building PC - see IncrementBuildNumber in the .vcxproj).
+/*! \brief Build number (counts every build on the building PC - see IncrementBuildNumber in the .vcxproj). */
 int GetBuildNumber();
-//! "MAJOR.MINOR.PATCH[-PRERELEASE]", e.g. "0.1.0-rc.1".
+/*! \brief "MAJOR.MINOR.PATCH[-PRERELEASE]", e.g. "0.1.0-rc.1". */
 std::string GetAppVersion();
-//! `git describe --always --dirty` of the built source, "unknown" without git.
+/*! \brief `git describe --always --dirty` of the built source, "unknown" without git. */
 std::string GetGitDescribe();
-//! Build date and time, "YYYY-MM-DD HH:MM".
+/*! \brief Build date and time, "YYYY-MM-DD HH:MM". */
 std::string GetBuildDate();
 
-//! Debug builds are development builds; Release builds are release candidates while Version.h has a
-//! pre-release label, otherwise final releases.
-enum class AppBuildChannel { Development, ReleaseCandidate, Final };
+/*!
+ * \brief Debug builds are development builds; Release builds are release candidates while Version.h has a
+ * pre-release label, otherwise final releases.
+ */
+enum class AppBuildChannel {
+	Development,      /*!< Debug build */
+	ReleaseCandidate, /*!< Release build with a pre-release label in Version.h */
+	Final             /*!< Release build without a pre-release label */
+};
+/*! \brief The channel of this build (see AppBuildChannel). */
 AppBuildChannel GetBuildChannel();
 
-//! "v0.1.0-rc.1b12" (+ "D" for Debug) - the same text the build puts in the versioned exe name.
+/*! \brief "v0.1.0-rc.1b12" (+ "D" for Debug) - the same text the build puts in the versioned exe name. */
 std::string GetCompactVersion();
-//! Window title text: "Template App (v0.1.0-rc.1b12, 2026-09-26 14:03)".
+/*! \brief Window title text: "Template App (v0.1.0-rc.1b12, 2026-09-26 14:03)". */
 std::string GetWindowTitle();
