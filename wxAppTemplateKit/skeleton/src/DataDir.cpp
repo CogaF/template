@@ -1,6 +1,13 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file DataDir.cpp
+ * \brief Implementation of DataDir.h.
+ */
 
 #include "DataDir.h"
 #include "AppInfo.h"
@@ -10,6 +17,9 @@
 #include <wx/stdpaths.h>
 
 #ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX // std::min/std::max, not the windows.h macros
+#endif
 #include <windows.h>
 #endif
 

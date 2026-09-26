@@ -1,6 +1,13 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file SerialWorker.cpp
+ * \brief Implementation of SerialWorker.h.
+ */
 
 #include "SerialWorker.h"
 #include "Log.h"

@@ -1,0 +1,22 @@
+# Doxygen configuration - run "doxygen" in this folder; the HTML is written to docs/html/index.html.
+PROJECT_NAME           = "Template App"
+PROJECT_BRIEF          = "wxWidgets + SQLite + serial application"
+OUTPUT_DIRECTORY       = docs
+INPUT                  = include src README.md DEPENDENCIES.md LICENSE.md
+FILE_PATTERNS          = *.h *.cpp *.md
+USE_MDFILE_AS_MAINPAGE = README.md
+RECURSIVE              = NO
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_ANON_NSPACES   = NO
+JAVADOC_AUTOBRIEF      = NO
+QT_AUTOBRIEF           = NO
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+SOURCE_BROWSER         = YES
+HAVE_DOT               = NO
+QUIET                  = YES
+EXCLUDE_SYMBOLS        = wxDECLARE_APP wxIMPLEMENT_APP wxDECLARE_EVENT wxDEFINE_EVENT

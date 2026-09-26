@@ -1,15 +1,25 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file MainWindow.cpp
+ * \brief Implementation of MainWindow.h.
+ */
 
 #include "MainWindow.h"
 #include "AppInfo.h"
 #include "AppSettings.h"
 #include "BuildInfo.h"
 #include "DataDir.h"
+#include "GuiUtils.h"
+#include "HexUtils.h"
 #include "I18n.h"
 #include "Log.h"
 #include "SerialConfigDialog.h"
+#include "StatusLed.h"
 #include "Theme.h"
 #include "UVT.h"
 #include "Version.h"
@@ -41,23 +51,6 @@ namespace {
 		ID_VERSION_INFO,
 	};
 
-	//! "01 03 0a" / "01030A" -> bytes; false on anything that isn't hex pairs.
-	bool parseHex(const wxString& text, std::vector<uint8_t>& out) {
-		out.clear();
-		wxString digits;
-		for (wxUniChar ch : text) {
-			if (ch == ' ' || ch == ',' || ch == ':' || ch == '-') continue;
-			if (!wxIsxdigit(ch)) return false;
-			digits += ch;
-		}
-		if (digits.empty() || digits.length() % 2 != 0) return false;
-		for (size_t i = 0; i < digits.length(); i += 2) {
-			unsigned long v = 0;
-			if (!digits.Mid(i, 2).ToULong(&v, 16)) return false;
-			out.push_back(static_cast<uint8_t>(v));
-		}
-		return true;
-	}
 }
 
 MainWindow::MainWindow()
@@ -129,6 +122,8 @@ void MainWindow::buildContent() {
 	auto* top = new wxBoxSizer(wxVERTICAL);
 
 	auto* portRow = new wxBoxSizer(wxHORIZONTAL);
+	portLed_ = new StatusLed(panel);
+	portRow->Add(portLed_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
 	portRow->Add(new wxStaticText(panel, wxID_ANY, tr(UVT::PORT_LABEL)), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
 	portText_ = new wxStaticText(panel, wxID_ANY, wxEmptyString);
 	portRow->Add(portText_, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
@@ -166,6 +161,8 @@ void MainWindow::buildContent() {
 
 void MainWindow::updatePortControls() {
 	const bool open = link_.isOpen();
+	portLed_->SetState(open ? StatusLed::State::Green : StatusLed::State::Off);
+	portLed_->SetHint(open ? wxString::Format(tr(UVT::STATUSBAR_PORT_OPEN_FMT), wxString::FromUTF8(config_.describe())) : tr(UVT::STATUSBAR_PORT_CLOSED));
 	portText_->SetLabel(config_.isValid() ? wxString::FromUTF8(config_.describe()) : tr(UVT::PORT_NOT_SET));
 	portButton_->SetLabel(open ? tr(UVT::CLOSE_PORT_BTN) : tr(UVT::OPEN_PORT_BTN));
 	portButton_->Enable(config_.isValid());
@@ -213,12 +210,13 @@ void MainWindow::onSend(wxCommandEvent&) {
 		wxMessageBox(tr(UVT::SEND_NOT_OPEN), tr(UVT::ERROR_TITLE), wxOK | wxICON_INFORMATION, this);
 		return;
 	}
-	std::vector<uint8_t> bytes;
-	if (!parseHex(sendText_->GetValue(), bytes)) {
+	const auto parsed = Utils::Hex::parseBytes(sendText_->GetValue().utf8_string());
+	if (!parsed || parsed->empty()) {
 		wxMessageBox(tr(UVT::SEND_BAD_HEX), tr(UVT::ERROR_TITLE), wxOK | wxICON_INFORMATION, this);
 		return;
 	}
-	Log::info("TX: " + Log::hex(bytes));
+	const std::vector<uint8_t>& bytes = *parsed;
+	Log::info("TX: " + Utils::Hex::bytesToString(bytes));
 	SerialWorker::Job job;
 	job.request = bytes;
 	job.timeoutMs = 1000;
@@ -226,13 +224,13 @@ void MainWindow::onSend(wxCommandEvent&) {
 	// here, e.g. [](const auto& rx) { return rx.size() >= 3 ? size_t(4 + rx[2]) : size_t(0); }.
 	job.done = [this](SerialLink::Result result, const std::vector<uint8_t>& reply) {
 		// Runs on the GUI thread (see SerialWorker) - windows may be used directly here.
-		const std::string text = std::string(SerialLink::resultName(result)) + (reply.empty() ? "" : ": " + Log::hex(reply));
+		const std::string text = std::string(SerialLink::resultName(result)) + (reply.empty() ? "" : ": " + Utils::Hex::bytesToString(reply));
 		Log::info("RX " + text);
 		recordEvent("rx", text);
-		SetStatusText(wxString::Format(tr(UVT::REPLY_FMT), SerialLink::resultName(result), wxString::FromUTF8(Log::hex(reply))), 0);
+		SetStatusText(wxString::Format(tr(UVT::REPLY_FMT), SerialLink::resultName(result), wxString::FromUTF8(Utils::Hex::bytesToString(reply))), 0);
 	};
 	worker_->submit(std::move(job));
-	recordEvent("tx", Log::hex(bytes));
+	recordEvent("tx", Utils::Hex::bytesToString(bytes));
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -255,12 +253,8 @@ void MainWindow::onLogTimer(wxTimerEvent&) {
 	if (lines.empty()) return;
 	wxString text;
 	for (const std::string& line : lines) text << wxString::FromUTF8(line) << '\n';
-	logText_->Freeze();
-	logText_->AppendText(text);
-	// Keep the control bounded - the full history is in the log file.
-	const int excess = logText_->GetNumberOfLines() - kMaxLogLines;
-	if (excess > 0) logText_->Remove(0, logText_->XYToPosition(0, excess));
-	logText_->Thaw();
+	// Bounded (the full history is in the log file); keeps the view still while the user reads.
+	Utils::Gui::appendToConsole(logText_, text, kMaxLogLines, true);
 }
 
 // ------------------------------------------------------------------------------------------------

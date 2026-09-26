@@ -1,6 +1,13 @@
-// Copyright (C) 2026 Fation Coga
-// SPDX-License-Identifier: LGPL-3.0-or-later
-// This file is part of Template App - see COPYING and COPYING.LESSER.
+/*
+ * Copyright (C) 2026 Fation Coga
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * This file is part of Template App - see COPYING and COPYING.LESSER.
+ */
+
+/*!
+ * \file I18n.cpp
+ * \brief Implementation of I18n.h.
+ */
 
 #include "I18n.h"
 #include "DataDir.h"
@@ -17,7 +24,7 @@ namespace {
 	std::map<wxString, wxString> g_dict;
 	std::string g_code = "en";
 
-	//! Value of attribute `name="..."` in one XML line, raw (still escaped). false if absent.
+	/*! \brief Value of attribute `name="..."` in one XML line, raw (still escaped). false if absent. */
 	bool attribute(const std::string& line, const std::string& name, std::string& out) {
 		const std::string key = " " + name + "=\"";
 		const size_t start = line.find(key);
