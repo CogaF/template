@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Copyright (C) 2026 Fation Coga - SPDX-License-Identifier: LGPL-3.0-or-later -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DLL|x64">
+      <Configuration>Debug_DLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DLL|x64">
+      <Configuration>Release_DLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DLL|Win32">
+      <Configuration>Debug_DLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DLL|Win32">
+      <Configuration>Release_DLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{3F6B2A41-8C7D-4E59-9A1B-5D2C7E8F9A10}</ProjectGuid>
+    <RootNamespace>TemplateApp</RootNamespace>
+    <ProjectName>TemplateApp</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <!-- Application name: window title, exe name, data folder (keep in sync with include/AppInfo.h). -->
+    <AppExeBaseName>Template App</AppExeBaseName>
+    <!-- Dependencies (see DEPENDENCIES.md). Override any of these in a Directory.Build.props or on the
+         msbuild command line (/p:SqliteLibDir=...) if your folders are laid out differently. -->
+    <WxArchSuffix Condition="'$(Platform)'=='x64'">_x64</WxArchSuffix>
+    <WxArchSuffix Condition="'$(Platform)'!='x64'"></WxArchSuffix>
+    <WxLinkKind Condition="$(Configuration.EndsWith('_DLL'))">dll</WxLinkKind>
+    <WxLinkKind Condition="!$(Configuration.EndsWith('_DLL'))">lib</WxLinkKind>
+    <WxLibDir Condition="'$(WxLibDir)'==''">$(WXWIN)\lib\vc$(WxArchSuffix)_$(WxLinkKind)</WxLibDir>
+    <DepConfig Condition="$(Configuration.StartsWith('Debug'))">Debug</DepConfig>
+    <DepConfig Condition="!$(Configuration.StartsWith('Debug'))">Release</DepConfig>
+    <SqliteIncludeDir Condition="'$(SqliteIncludeDir)'==''">$(VC_SQLITE)\include</SqliteIncludeDir>
+    <SqliteLibDir Condition="'$(SqliteLibDir)'==''">$(VC_SQLITE)\$(Platform)\$(DepConfig)</SqliteLibDir>
+    <SerialIncludeDir Condition="'$(SerialIncludeDir)'==''">$(VC_WJWWOOD_SERIAL)\include</SerialIncludeDir>
+    <SerialLibDir Condition="'$(SerialLibDir)'==''">$(VC_WJWWOOD_SERIAL)\$(Platform)\$(DepConfig)</SerialLibDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetName>$(AppExeBaseName)</TargetName>
+    <OutDir>$(SolutionDir)Builds\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>$(WxLibDir);$(SqliteLibDir);$(SerialLibDir);$(LibraryPath)</LibraryPath>
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <!-- wxWidgets libraries are linked automatically by wx/msw/setup.h (include\msvc). -->
+      <AdditionalDependencies>sqlite3.lib;serial.lib;setupapi.lib;comctl32.lib;rpcrt4.lib;ws2_32.lib;uxtheme.lib;oleacc.lib;winmm.lib;shlwapi.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <!-- The linker writes the manifest (wx.rc's own is switched off with wxUSE_NO_MANIFEST=1, or
+           the two would clash): themed common controls v6 + per-monitor DPI awareness. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;wxUSE_NO_MANIFEST=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
+xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+      <Message>Copying language files and needed DLLs next to the exe</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\AppSettings.cpp" />
+    <ClCompile Include="src\BuildInfo.cpp" />
+    <ClCompile Include="src\DataDir.cpp" />
+    <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\I18n.cpp" />
+    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\MainWindow.cpp" />
+    <ClCompile Include="src\SerialConfig.cpp" />
+    <ClCompile Include="src\SerialConfigDialog.cpp" />
+    <ClCompile Include="src\SerialLink.cpp" />
+    <ClCompile Include="src\SerialWorker.cpp" />
+    <ClCompile Include="src\Theme.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\App.h" />
+    <ClInclude Include="include\AppInfo.h" />
+    <ClInclude Include="include\AppSettings.h" />
+    <ClInclude Include="include\BuildInfo.h" />
+    <ClInclude Include="include\DataDir.h" />
+    <ClInclude Include="include\Database.h" />
+    <ClInclude Include="include\I18n.h" />
+    <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\MainWindow.h" />
+    <ClInclude Include="include\SerialConfig.h" />
+    <ClInclude Include="include\SerialConfigDialog.h" />
+    <ClInclude Include="include\SerialLink.h" />
+    <ClInclude Include="include\SerialWorker.h" />
+    <ClInclude Include="include\Theme.h" />
+    <ClInclude Include="include\ThreadUtils.h" />
+    <ClInclude Include="include\UVT.h" />
+    <ClInclude Include="include\Version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TemplateApp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="languages\language-it.xml" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Build number, git commit and build date -> include\GeneratedBuildInfo.h (gitignored), before
+       every compile. BuildCounter.txt (gitignored) keeps the count on the building PC. -->
+  <Target Name="IncrementBuildNumber" BeforeTargets="ClCompile">
+    <ReadLinesFromFile File="$(MSBuildProjectDirectory)\BuildCounter.txt" Condition="Exists('$(MSBuildProjectDirectory)\BuildCounter.txt')">
+      <Output TaskParameter="Lines" ItemName="_BuildNumberLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <_OldBuildNumber>@(_BuildNumberLines)</_OldBuildNumber>
+      <_OldBuildNumber>$([System.String]::Copy('$(_OldBuildNumber)').Trim())</_OldBuildNumber>
+      <_OldBuildNumber Condition="'$(_OldBuildNumber)' == ''">0</_OldBuildNumber>
+      <BuildNumber>$([MSBuild]::Add($(_OldBuildNumber), 1))</BuildNumber>
+      <BuildDate>$([System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))</BuildDate>
+    </PropertyGroup>
+    <Exec Command="git describe --always --dirty --abbrev=7" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" ContinueOnError="true" IgnoreExitCode="true" StandardOutputImportance="low" StandardErrorImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitDescribeRaw" />
+      <Output TaskParameter="ExitCode" PropertyName="_GitExitCode" />
+    </Exec>
+    <PropertyGroup>
+      <GitDescribe Condition="'$(_GitExitCode)' == '0'">$([System.String]::Copy('$(_GitDescribeRaw)').Trim())</GitDescribe>
+      <GitDescribe Condition="'$(GitDescribe)' == ''">unknown</GitDescribe>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)\BuildCounter.txt" Lines="$(BuildNumber)" Overwrite="true" />
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)\include\GeneratedBuildInfo.h" Lines="#pragma once&#xD;&#xA;constexpr int BUILD_NUMBER = $(BuildNumber)%3b&#xD;&#xA;constexpr const char* GIT_DESCRIBE = &quot;$(GitDescribe)&quot;%3b&#xD;&#xA;constexpr const char* BUILD_DATE = &quot;$(BuildDate)&quot;%3b" Overwrite="true" />
+  </Target>
+  <!-- Versioned copy of the exe, named like the window title: "Template App v0.1.0-rc.1b12.exe"
+       (+ "D" for Debug) - same text as GetCompactVersion(). Previous copies are kept. -->
+  <Target Name="CopyVersionedExe" AfterTargets="Build" Condition="'$(BuildNumber)' != ''">
+    <PropertyGroup>
+      <_VerH>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\include\Version.h'))</_VerH>
+      <_VerMajor>$([System.Text.RegularExpressions.Regex]::Replace($(_VerH), '(?s)^.*#define\s+APP_VERSION_MAJOR\s+(\d+).*$', '$1'))</_VerMajor>
+      <_VerMinor>$([System.Text.RegularExpressions.Regex]::Replace($(_VerH), '(?s)^.*#define\s+APP_VERSION_MINOR\s+(\d+).*$', '$1'))</_VerMinor>
+      <_VerPatch>$([System.Text.RegularExpressions.Regex]::Replace($(_VerH), '(?s)^.*#define\s+APP_VERSION_PATCH\s+(\d+).*$', '$1'))</_VerPatch>
+      <_VerPre>$([System.Text.RegularExpressions.Regex]::Replace($(_VerH), '(?s)^.*#define\s+APP_VERSION_PRERELEASE\s+"([^"]*)".*$', '$1'))</_VerPre>
+      <_CompactVersion>v$(_VerMajor).$(_VerMinor).$(_VerPatch)</_CompactVersion>
+      <_CompactVersion Condition="'$(_VerPre)' != ''">$(_CompactVersion)-$(_VerPre)</_CompactVersion>
+      <_CompactVersion>$(_CompactVersion)b$(BuildNumber)</_CompactVersion>
+      <_CompactVersion Condition="$(Configuration.StartsWith('Debug'))">$(_CompactVersion)D</_CompactVersion>
+    </PropertyGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(OutDir)$(AppExeBaseName) $(_CompactVersion)$(TargetExt)" />
+    <Message Importance="high" Text="Versioned exe: $(OutDir)$(AppExeBaseName) $(_CompactVersion)$(TargetExt)" />
+  </Target>
+</Project>

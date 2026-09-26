@@ -1,0 +1,8 @@
+// Copyright (C) 2026 Fation Coga
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
+// Standard wxWidgets resources: the manifest (common controls v6, DPI awareness) and the default
+// icons/cursors. To give the exe its own icon, add a line such as
+//     wxICON_AAA ICON "app.ico"
+// BEFORE this include (the first icon in the file becomes the exe's icon).
+#include "wx/msw/wx.rc"

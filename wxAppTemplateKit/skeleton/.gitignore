@@ -1,0 +1,8 @@
+# Build output
+Builds/
+obj/
+*.user
+.vs/
+# Written by the build (see the IncrementBuildNumber target)
+BuildCounter.txt
+include/GeneratedBuildInfo.h

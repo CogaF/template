@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translation language="it" name="Italiano">
+    <entry key="&amp;File" value="&amp;File"/>
+    <entry key="E&amp;xit&#9;Alt-X" value="&amp;Esci&#9;Alt-X"/>
+    <entry key="&amp;Settings" value="&amp;Impostazioni"/>
+    <entry key="&amp;Serial Port..." value="Porta &amp;seriale..."/>
+    <entry key="&amp;Theme..." value="&amp;Tema..."/>
+    <entry key="&amp;Language..." value="&amp;Lingua..."/>
+    <entry key="Log &amp;Level..." value="&amp;Livello log..."/>
+    <entry key="Open &amp;Data Folder" value="Apri cartella &amp;dati"/>
+    <entry key="&amp;Help" value="&amp;Aiuto"/>
+    <entry key="&amp;Version Info..." value="Informazioni &amp;versione..."/>
+    <entry key="&amp;About..." value="&amp;Informazioni su..."/>
+    <entry key="Port:" value="Porta:"/>
+    <entry key="not set" value="non impostata"/>
+    <entry key="Open Port" value="Apri porta"/>
+    <entry key="Close Port" value="Chiudi porta"/>
+    <entry key="Send (hex):" value="Invia (esadecimale):"/>
+    <entry key="Send" value="Invia"/>
+    <entry key="e.g. 01 03 00 00 00 01" value="es. 01 03 00 00 00 01"/>
+    <entry key="Clear Log" value="Svuota log"/>
+    <entry key="Ready" value="Pronto"/>
+    <entry key="Port open: %s" value="Porta aperta: %s"/>
+    <entry key="Port closed" value="Porta chiusa"/>
+    <entry key="Cannot open %s:&#10;%s" value="Impossibile aprire %s:&#10;%s"/>
+    <entry key="Write the bytes to send as hexadecimal pairs, e.g. 01 03 00 00." value="Scrivi i byte da inviare come coppie esadecimali, es. 01 03 00 00."/>
+    <entry key="Open the port first." value="Apri prima la porta."/>
+    <entry key="Reply (%s): %s" value="Risposta (%s): %s"/>
+    <entry key="Error" value="Errore"/>
+    <entry key="Serial Port" value="Porta seriale"/>
+    <entry key="Port" value="Porta"/>
+    <entry key="Baud rate" value="Velocità (baud)"/>
+    <entry key="Data bits" value="Bit di dati"/>
+    <entry key="Parity" value="Parità"/>
+    <entry key="Stop bits" value="Bit di stop"/>
+    <entry key="Flow control" value="Controllo di flusso"/>
+    <entry key="Inter-byte timeout (ms)" value="Timeout tra byte (ms)"/>
+    <entry key="Read timeout (ms)" value="Timeout lettura (ms)"/>
+    <entry key="Write timeout (ms)" value="Timeout scrittura (ms)"/>
+    <entry key="Refresh" value="Aggiorna"/>
+    <entry key="None" value="Nessuna"/>
+    <entry key="Odd" value="Dispari"/>
+    <entry key="Even" value="Pari"/>
+    <entry key="Mark" value="Mark"/>
+    <entry key="Space" value="Space"/>
+    <entry key="None" value="Nessuno"/>
+    <entry key="Software (XON/XOFF)" value="Software (XON/XOFF)"/>
+    <entry key="Hardware (RTS/CTS)" value="Hardware (RTS/CTS)"/>
+    <entry key="Theme" value="Tema"/>
+    <entry key="Select the theme:" value="Seleziona il tema:"/>
+    <entry key="Light" value="Chiaro"/>
+    <entry key="Dark" value="Scuro"/>
+    <entry key="Language" value="Lingua"/>
+    <entry key="Select the language:" value="Seleziona la lingua:"/>
+    <entry key="The change is applied completely only when the application starts.&#10;&#10;Restart now: save it and restart the application automatically.&#10;Use now: save it and use it right away - some parts change only at the next start.&#10;Save for next start: keep working; it applies the next time the application is launched.&#10;Cancel: discard the selection." value="La modifica viene applicata completamente solo all'avvio dell'applicazione.&#10;&#10;Riavvia ora: la salva e riavvia automaticamente l'applicazione.&#10;Usa ora: la salva e la usa subito - alcune parti cambiano solo al prossimo avvio.&#10;Salva per il prossimo avvio: continua a lavorare; verrà applicata al prossimo avvio dell'applicazione.&#10;Annulla: scarta la selezione."/>
+    <entry key="Restart now" value="Riavvia ora"/>
+    <entry key="Use now" value="Usa ora"/>
+    <entry key="Save for next start" value="Salva per il prossimo avvio"/>
+    <entry key="Cancel" value="Annulla"/>
+    <entry key="The new theme is used for the application's colours, including the windows opened from now on. Parts drawn by the system (title bars, scroll bars) change at the next start." value="Il nuovo tema è usato per i colori dell'applicazione, incluse le finestre aperte da ora in poi. Le parti disegnate dal sistema (barre del titolo, barre di scorrimento) cambiano al prossimo avvio."/>
+    <entry key="The language file for &quot;%s&quot; could not be loaded - the current language is kept." value="Impossibile caricare il file della lingua &quot;%s&quot; - resta la lingua attuale."/>
+    <entry key="Log Level" value="Livello log"/>
+    <entry key="Write to the log messages up to:" value="Scrivi nel log i messaggi fino a:"/>
+    <entry key="About %s" value="Informazioni su %s"/>
+    <entry key="%s&#10;Version %s&#10;&#10;%s&#10;Licensed under the %s.&#10;&#10;Built with wxWidgets %s, SQLite %s and serial (wjwwood/serial, CogaF fork)." value="%s&#10;Versione %s&#10;&#10;%s&#10;Distribuito con licenza %s.&#10;&#10;Realizzato con wxWidgets %s, SQLite %s e serial (wjwwood/serial, fork CogaF)."/>
+    <entry key="Version Information" value="Informazioni versione"/>
+    <entry key="Version: %s&#10;Build: %d (%s)&#10;Build type: %s&#10;Source (git): %s&#10;Data folder: %s" value="Versione: %s&#10;Build: %d (%s)&#10;Tipo di build: %s&#10;Sorgente (git): %s&#10;Cartella dati: %s"/>
+    <entry key="Development (Debug)" value="Sviluppo (Debug)"/>
+    <entry key="Release candidate" value="Release candidate"/>
+    <entry key="Final release" value="Versione finale"/>
+    <entry key="Version history (newest first):" value="Cronologia versioni (dalla più recente):"/>
+</translation>
