@@ -68,31 +68,33 @@ builds copy the wxWidgets DLLs next to the exe after each build.
 template - even the "static" builds link wxWidgets statically but use the DLL runtime. A computer
 without Visual Studio then needs the **Microsoft Visual C++ Redistributable (x64 or x86)** installed.
 For a single, fully self-contained exe, rebuild wxWidgets (and SQLite and serial) with the static
-runtime (`nmake ... RUNTIME_LIBS=static`) and set *C/C++ → Code Generation → Runtime Library* to
-`/MT` (`/MTd` for Debug) in the project.
+runtime (`nmake ... RUNTIME_LIBS=static`; for SQLite `build_all.bat static-crt`, which writes to
+`Builds_StaticCRT\` - point `SqliteIncludeDir`/`SqliteLibDir` there) and set *C/C++ → Code
+Generation → Runtime Library* to `/MT` (`/MTd` for Debug) in the project.
 
 ## 4. SQLite
 
-Expected layout:
-
-```
-%VC_SQLITE%\include\sqlite3.h
-%VC_SQLITE%\x64\Debug\sqlite3.lib      %VC_SQLITE%\x64\Release\sqlite3.lib
-%VC_SQLITE%\Win32\Debug\sqlite3.lib    %VC_SQLITE%\Win32\Release\sqlite3.lib
-```
-
-The simplest way is a static library from the *amalgamation* (`sqlite-amalgamation-*.zip` from
-<https://www.sqlite.org/download.html>): create a Visual Studio "Static Library" project containing
-`sqlite3.c`, with output folder `$(SolutionDir)$(Platform)\$(Configuration)\`, and build Debug and
-Release for x64 and Win32. Or from a *Developer Command Prompt* (x64 or x86):
+Built with **SQLite3_builder** (<https://github.com/CogaF/SQLite3_builder>): a Visual Studio solution
+that builds the SQLite amalgamation as a static library and a DLL, Debug and Release, x64 and x86.
 
 ```bat
-cl /c /O2 /MD sqlite3.c
-lib /OUT:sqlite3.lib sqlite3.obj
+git clone https://github.com/CogaF/SQLite3_builder.git C:\libs\SQLite3_builder
+C:\libs\SQLite3_builder\build_all.bat
+setx VC_SQLITE C:\libs\SQLite3_builder
 ```
 
-If you build SQLite as a DLL instead, put `sqlite3.dll` in the same folder as its import library: the
-post-build step copies it next to the exe.
+Layout it produces (`x86` is the Win32 platform):
+
+```
+%VC_SQLITE%\Builds\include\sqlite3.h
+%VC_SQLITE%\Builds\x64\Debug\lib\sqlite3.lib        %VC_SQLITE%\Builds\x64\Release\lib\sqlite3.lib
+%VC_SQLITE%\Builds\x64\Debug\dll\sqlite3.dll + .lib  %VC_SQLITE%\Builds\x64\Release\dll\sqlite3.dll + .lib
+%VC_SQLITE%\Builds\x86\...                            (the same for Win32)
+```
+
+The static configurations (Debug, Release) link `lib\sqlite3.lib`; the DLL configurations
+(Debug_DLL, Release_DLL) link `dll\sqlite3.lib` and the post-build step copies `sqlite3.dll` next to
+the exe.
 
 ## 5. serial (CogaF fork of wjwwood/serial)
 
@@ -124,8 +126,8 @@ The fork currently builds on Windows only: its Unix backend still returns `std::
 
 | Build | Files next to the exe |
 |---|---|
-| static (Debug, Release) | the exe; `sqlite3.dll` only if SQLite was built as a DLL |
-| DLL (Debug_DLL, Release_DLL) | the exe + the wxWidgets DLLs (copied by the build) |
+| static (Debug, Release) | the exe |
+| DLL (Debug_DLL, Release_DLL) | the exe + the wxWidgets DLLs and `sqlite3.dll` (copied by the build) |
 | all | the folder `<App name> data\` with the language files (copied by the build) |
 
 Plus the Visual C++ Redistributable on computers without Visual Studio (see "C runtime" above).
