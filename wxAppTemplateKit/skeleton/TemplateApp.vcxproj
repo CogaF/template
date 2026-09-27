@@ -112,6 +112,10 @@
     <WxLibDir Condition="'$(WxLibDir)'==''">$(WXWIN)\lib\vc$(WxArchSuffix)_$(WxLinkKind)</WxLibDir>
     <DepConfig Condition="$(Configuration.StartsWith('Debug'))">Debug</DepConfig>
     <DepConfig Condition="!$(Configuration.StartsWith('Debug'))">Release</DepConfig>
+    <!-- Only the wxWidgets DLLs of this configuration are copied: wxbase33ud_vc_x64_custom.dll (debug),
+         wxbase33u_vc_x64_custom.dll (release). -->
+    <WxDllPattern Condition="'$(DepConfig)'=='Debug'">wx*ud_*.dll</WxDllPattern>
+    <WxDllPattern Condition="'$(DepConfig)'!='Debug'">wx*u_*.dll</WxDllPattern>
     <!-- SQLite built with SQLite3_builder. VC_SQLITE = the folder holding its output (include\, x64\,
          x86\ - the content of its Builds\ folder, or a copy of it): the static library for the static
          configurations, the DLL (copied next to the exe after the build) for the _DLL ones. -->
@@ -243,7 +247,7 @@ if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
 if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
-xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -284,7 +288,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
 if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
-xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -397,7 +401,7 @@ if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
 if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
-xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -438,7 +442,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
 if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
-xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
+if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
