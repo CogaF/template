@@ -3,6 +3,6 @@
 
 // Standard wxWidgets resources: the manifest (common controls v6, DPI awareness) and the default
 // icons/cursors. To give the exe its own icon, add a line such as
-//     wxICON_AAA ICON "app.ico"
+//     appicon ICON "app.ico"
 // BEFORE this include (the first icon in the file becomes the exe's icon).
 #include "wx/msw/wx.rc"
