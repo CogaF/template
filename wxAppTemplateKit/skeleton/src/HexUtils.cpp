@@ -156,4 +156,34 @@ uint32_t crc32(const uint8_t* data, size_t size) {
 	return ~crc;
 }
 
+uint16_t sum16(const uint8_t* data, size_t size) {
+	uint16_t v = 0;
+	for (size_t i = 0; i < size; ++i) v = static_cast<uint16_t>(v + data[i]);
+	return v;
+}
+
+uint64_t crc(const uint8_t* data, size_t size, int width, uint64_t poly, uint64_t init, bool reflect, uint64_t xorOut) {
+	const uint64_t top = uint64_t{ 1 } << (width - 1);
+	const uint64_t mask = Utils::Bits::mask<uint64_t>(static_cast<unsigned>(width));
+	uint64_t reg = init & mask;
+	for (size_t i = 0; i < size; ++i) {
+		uint8_t byte = data[i];
+		if (reflect) byte = Utils::Bits::reverse(byte);
+		for (int b = 7; b >= 0; --b) {
+			const bool in = ((byte >> b) & 1) != 0;
+			const bool msb = (reg & top) != 0;
+			reg = (reg << 1) & mask;
+			if (in != msb) reg ^= poly & mask;
+		}
+	}
+	if (reflect) reg = Utils::Bits::reverse(reg) >> (64 - width);
+	return (reg ^ xorOut) & mask;
+}
+
+uint8_t crc8(const uint8_t* data, size_t size) { return static_cast<uint8_t>(crc(data, size, 8, 0x07, 0, false, 0)); }
+uint8_t crc8Maxim(const uint8_t* data, size_t size) { return static_cast<uint8_t>(crc(data, size, 8, 0x31, 0, true, 0)); }
+uint16_t crc16Arc(const uint8_t* data, size_t size) { return static_cast<uint16_t>(crc(data, size, 16, 0x8005, 0, true, 0)); }
+uint16_t crc16Xmodem(const uint8_t* data, size_t size) { return static_cast<uint16_t>(crc(data, size, 16, 0x1021, 0, false, 0)); }
+uint32_t crc32c(const uint8_t* data, size_t size) { return static_cast<uint32_t>(crc(data, size, 32, 0x1EDC6F41, 0xFFFFFFFF, true, 0xFFFFFFFF)); }
+
 } // namespace Utils::Checksum

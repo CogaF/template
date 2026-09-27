@@ -86,8 +86,14 @@ public:
 
 	/*! \brief Writes without waiting for a reply. */
 	Result write(const std::vector<uint8_t>& tx);
-	/*! \brief Appends whatever bytes are waiting (non-blocking). Returns how many. */
-	size_t readAvailable(std::vector<uint8_t>& out);
+	/*!
+	 * \brief Appends whatever bytes are waiting (non-blocking). Returns how many.
+	 * \param out    receives the bytes (appended).
+	 * \param failed if given, set to true when the port could not be read (not open, or the serial
+	 *               library threw - e.g. a USB adapter was unplugged), false otherwise. Busy (another
+	 *               thread holds the port) is not a failure.
+	 */
+	size_t readAvailable(std::vector<uint8_t>& out, bool* failed = nullptr);
 
 	/*! \brief Makes a transact() in progress on another thread return Aborted soon (e.g. at shutdown). */
 	void requestAbort() { abort_.store(true); }

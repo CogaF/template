@@ -156,9 +156,14 @@ SerialLink::Result SerialLink::write(const std::vector<uint8_t>& tx) {
 	}
 }
 
-size_t SerialLink::readAvailable(std::vector<uint8_t>& out) {
+size_t SerialLink::readAvailable(std::vector<uint8_t>& out, bool* failed) {
+	if (failed) *failed = false;
 	std::unique_lock<std::timed_mutex> lock(mutex_, std::chrono::milliseconds(kLockTimeoutMs));
-	if (!lock.owns_lock() || !port_ || !port_->isOpen()) return 0;
+	if (!lock.owns_lock()) return 0;
+	if (!port_ || !port_->isOpen()) {
+		if (failed) *failed = true;
+		return 0;
+	}
 	try {
 		const size_t avail = port_->available();
 		if (avail == 0) return 0;
@@ -168,7 +173,8 @@ size_t SerialLink::readAvailable(std::vector<uint8_t>& out) {
 		return n;
 	}
 	catch (const std::exception& e) {
-		Log::error(std::string("SerialLink: read failed: ") + e.what());
+		if (failed) *failed = true;
+		else Log::error(std::string("SerialLink: read failed: ") + e.what()); // a caller that checks logs it itself
 		return 0;
 	}
 }

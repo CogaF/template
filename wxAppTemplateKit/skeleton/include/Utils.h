@@ -16,7 +16,7 @@
  * | Utils::Time        | TimeUtils.h    | clocks, timestamps, durations, packed timestamps, sleeping |
  * | Utils::Hex         | HexUtils.h     | numbers/bytes <-> hex and binary text, hex dumps, parsing  |
  * | Utils::Bits        | HexUtils.h     | bit get/set/extract/insert, byte order, float bit patterns |
- * | Utils::Checksum    | HexUtils.h     | XOR/sum, CRC-16 (Modbus, CCITT), CRC-32                    |
+ * | Utils::Checksum    | HexUtils.h     | XOR/sum/LRC, CRC-8/16/32 presets, any CRC up to 64 bits   |
  * | Utils::Str         | TextUtils.h    | trim, split, join, case, parse numbers                     |
  * | Utils::Files       | TextUtils.h    | safe file names, unique paths, atomic writes, sizes        |
  * | Utils::Math        | MathUtils.h    | range mapping, rounding, tolerant comparison               |

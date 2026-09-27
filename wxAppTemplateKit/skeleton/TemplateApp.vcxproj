@@ -427,18 +427,25 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\AppSettings.cpp" />
+    <ClCompile Include="src\AsciiTableDialog.cpp" />
+    <ClCompile Include="src\AutomationDialog.cpp" />
     <ClCompile Include="src\BuildInfo.cpp" />
-    <ClCompile Include="src\DataDir.cpp" />
     <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\DataDir.cpp" />
+    <ClCompile Include="src\DataEntry.cpp" />
     <ClCompile Include="src\GuiUtils.cpp" />
     <ClCompile Include="src\HashUtils.cpp" />
     <ClCompile Include="src\HexUtils.cpp" />
     <ClCompile Include="src\I18n.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
+    <ClCompile Include="src\MessageDialogs.cpp" />
     <ClCompile Include="src\SerialConfig.cpp" />
     <ClCompile Include="src\SerialConfigDialog.cpp" />
+    <ClCompile Include="src\SerialData.cpp" />
     <ClCompile Include="src\SerialLink.cpp" />
+    <ClCompile Include="src\SerialMessage.cpp" />
+    <ClCompile Include="src\SerialMonitor.cpp" />
     <ClCompile Include="src\SerialWorker.cpp" />
     <ClCompile Include="src\StatusLed.cpp" />
     <ClCompile Include="src\TextUtils.cpp" />
@@ -449,9 +456,12 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\App.h" />
     <ClInclude Include="include\AppInfo.h" />
     <ClInclude Include="include\AppSettings.h" />
+    <ClInclude Include="include\AsciiTableDialog.h" />
+    <ClInclude Include="include\AutomationDialog.h" />
     <ClInclude Include="include\BuildInfo.h" />
-    <ClInclude Include="include\DataDir.h" />
     <ClInclude Include="include\Database.h" />
+    <ClInclude Include="include\DataDir.h" />
+    <ClInclude Include="include\DataEntry.h" />
     <ClInclude Include="include\GuiUtils.h" />
     <ClInclude Include="include\HashUtils.h" />
     <ClInclude Include="include\HexUtils.h" />
@@ -459,17 +469,21 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\MainWindow.h" />
     <ClInclude Include="include\MathUtils.h" />
+    <ClInclude Include="include\MessageDialogs.h" />
     <ClInclude Include="include\SerialConfig.h" />
     <ClInclude Include="include\SerialConfigDialog.h" />
+    <ClInclude Include="include\SerialData.h" />
     <ClInclude Include="include\SerialLink.h" />
+    <ClInclude Include="include\SerialMessage.h" />
+    <ClInclude Include="include\SerialMonitor.h" />
     <ClInclude Include="include\SerialWorker.h" />
     <ClInclude Include="include\StatusLed.h" />
     <ClInclude Include="include\TextUtils.h" />
     <ClInclude Include="include\Theme.h" />
     <ClInclude Include="include\ThreadUtils.h" />
     <ClInclude Include="include\TimeUtils.h" />
-    <ClInclude Include="include\UVT.h" />
     <ClInclude Include="include\Utils.h" />
+    <ClInclude Include="include\UVT.h" />
     <ClInclude Include="include\Version.h" />
   </ItemGroup>
   <ItemGroup>

@@ -12,8 +12,10 @@
 #include "MainWindow.h"
 #include "AppInfo.h"
 #include "AppSettings.h"
+#include "AutomationDialog.h"
 #include "BuildInfo.h"
 #include "DataDir.h"
+#include "DataEntry.h"
 #include "GuiUtils.h"
 #include "HexUtils.h"
 #include "I18n.h"
@@ -21,17 +23,22 @@
 #include "SerialConfigDialog.h"
 #include "StatusLed.h"
 #include "Theme.h"
+#include "TimeUtils.h"
 #include "UVT.h"
 #include "Version.h"
 
+#include <optional>
 #include <sstream>
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choicdlg.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
 #include <wx/stdpaths.h>
@@ -44,6 +51,9 @@
 namespace {
 	enum MenuId {
 		ID_SERIAL_SETTINGS = wxID_HIGHEST + 1,
+		ID_AUTO_REPLIES,
+		ID_PERIODIC,
+		ID_CLEAR_CONSOLE,
 		ID_THEME,
 		ID_LANGUAGE,
 		ID_LOG_LEVEL,
@@ -51,12 +61,29 @@ namespace {
 		ID_VERSION_INFO,
 	};
 
+	// Console colours, readable on light and dark backgrounds.
+	const wxColour kTimeColour(128, 128, 128);
+	const wxColour kRxColour(0, 120, 215);
+	const wxColour kTxColour(210, 100, 0);
+	const wxColour kAutoReplyColour(160, 70, 210);
+	const wxColour kPeriodicColour(0, 150, 80);
+	const wxColour kErrorColour(220, 40, 40);
+
+	/*! \brief A wxTimer that calls a function. */
+	class FunctionTimer : public wxTimer {
+	public:
+		explicit FunctionTimer(std::function<void()> fn) : fn_(std::move(fn)) {}
+		void Notify() override { fn_(); }
+	private:
+		std::function<void()> fn_;
+	};
 }
 
 MainWindow::MainWindow()
 	: wxFrame(nullptr, wxID_ANY, wxString::FromUTF8(GetWindowTitle()), wxDefaultPosition, wxSize(900, 600)),
 	  logTimer_(this) {
 	if (const auto saved = SerialConfig::fromString(AppSettings::getString("serialPort"))) config_ = *saved;
+	loadAutomation();
 
 	buildMenus();
 	buildContent();
@@ -70,7 +97,7 @@ MainWindow::MainWindow()
 		recordEvent("app", "started " + GetCompactVersion());
 	}
 
-	worker_ = std::make_unique<SerialWorker>(link_, this);
+	monitor_ = std::make_unique<SerialMonitor>(link_, this, [this](std::vector<SerialMonitor::Event>& events) { onSerialEvents(events); });
 	Bind(wxEVT_TIMER, &MainWindow::onLogTimer, this, logTimer_.GetId());
 	Bind(wxEVT_CLOSE_WINDOW, &MainWindow::onClose, this);
 	logTimer_.Start(200);
@@ -80,7 +107,8 @@ MainWindow::MainWindow()
 }
 
 MainWindow::~MainWindow() {
-	if (worker_) worker_->stop();
+	stopPeriodic();
+	if (monitor_) monitor_->stop();
 	link_.close();
 }
 
@@ -88,9 +116,15 @@ void MainWindow::buildMenus() {
 	auto* file = new wxMenu();
 	file->Append(wxID_EXIT, tr(UVT::MENU_EXIT));
 
+	auto* serialMenu = new wxMenu();
+	serialMenu->Append(ID_SERIAL_SETTINGS, tr(UVT::MENU_SERIAL_PORT));
+	serialMenu->AppendSeparator();
+	serialMenu->Append(ID_AUTO_REPLIES, tr(UVT::MENU_AUTO_REPLIES));
+	serialMenu->Append(ID_PERIODIC, tr(UVT::MENU_PERIODIC));
+	serialMenu->AppendSeparator();
+	serialMenu->Append(ID_CLEAR_CONSOLE, tr(UVT::MENU_CLEAR_CONSOLE));
+
 	auto* settings = new wxMenu();
-	settings->Append(ID_SERIAL_SETTINGS, tr(UVT::MENU_SERIAL_PORT));
-	settings->AppendSeparator();
 	settings->Append(ID_THEME, tr(UVT::MENU_THEME));
 	settings->Append(ID_LANGUAGE, tr(UVT::MENU_LANGUAGE));
 	settings->Append(ID_LOG_LEVEL, tr(UVT::MENU_LOG_LEVEL));
@@ -103,12 +137,16 @@ void MainWindow::buildMenus() {
 
 	auto* bar = new wxMenuBar();
 	bar->Append(file, tr(UVT::MENU_FILE));
+	bar->Append(serialMenu, tr(UVT::MENU_SERIAL));
 	bar->Append(settings, tr(UVT::MENU_SETTINGS));
 	bar->Append(help, tr(UVT::MENU_HELP));
 	SetMenuBar(bar);
 
 	Bind(wxEVT_MENU, [this](wxCommandEvent&) { Close(); }, wxID_EXIT);
 	Bind(wxEVT_MENU, &MainWindow::onSerialSettings, this, ID_SERIAL_SETTINGS);
+	Bind(wxEVT_MENU, [this](wxCommandEvent&) { onEditAutomation(false); }, ID_AUTO_REPLIES);
+	Bind(wxEVT_MENU, [this](wxCommandEvent&) { onEditAutomation(true); }, ID_PERIODIC);
+	Bind(wxEVT_MENU, [this](wxCommandEvent&) { console_->Clear(); }, ID_CLEAR_CONSOLE);
 	Bind(wxEVT_MENU, &MainWindow::onTheme, this, ID_THEME);
 	Bind(wxEVT_MENU, &MainWindow::onLanguage, this, ID_LANGUAGE);
 	Bind(wxEVT_MENU, &MainWindow::onLogLevel, this, ID_LOG_LEVEL);
@@ -121,6 +159,7 @@ void MainWindow::buildContent() {
 	auto* panel = new wxPanel(this);
 	auto* top = new wxBoxSizer(wxVERTICAL);
 
+	// Port: LED, settings, open / close.
 	auto* portRow = new wxBoxSizer(wxHORIZONTAL);
 	portLed_ = new StatusLed(panel);
 	portRow->Add(portLed_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
@@ -132,27 +171,89 @@ void MainWindow::buildContent() {
 	portRow->Add(portButton_, 0);
 	top->Add(portRow, 0, wxEXPAND | wxALL, 8);
 
-	auto* sendRow = new wxBoxSizer(wxHORIZONTAL);
-	sendRow->Add(new wxStaticText(panel, wxID_ANY, tr(UVT::SEND_HEX_LABEL)), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
-	sendText_ = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
-	sendText_->SetHint(tr(UVT::SEND_HEX_HINT));
-	sendText_->Bind(wxEVT_TEXT_ENTER, &MainWindow::onSend, this);
-	sendRow->Add(sendText_, 1, wxRIGHT, 6);
-	sendButton_ = new wxButton(panel, wxID_ANY, tr(UVT::SEND_BTN));
+	// Send: notation, text, character table, Send.
+	auto* sendBox = new wxStaticBoxSizer(wxHORIZONTAL, panel, tr(UVT::SEND_GROUP_LABEL));
+	const auto savedFormat = SerialData::formatFromKey(AppSettings::getString("send.format", "hex"));
+	sendEntry_ = new DataEntry(sendBox->GetStaticBox(), savedFormat ? *savedFormat : SerialData::DataFormat::Hex,
+		wxString::FromUTF8(AppSettings::getString("send.text")), true);
+	sendEntry_->SetOnEnter([this] { wxCommandEvent e; onSend(e); });
+	sendBox->Add(sendEntry_, 1, wxEXPAND | wxALL, 4);
+	sendButton_ = new wxButton(sendBox->GetStaticBox(), wxID_ANY, tr(UVT::SEND_BTN));
 	sendButton_->Bind(wxEVT_BUTTON, &MainWindow::onSend, this);
-	sendRow->Add(sendButton_, 0);
-	top->Add(sendRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+	sendBox->Add(sendButton_, 0, wxALIGN_BOTTOM | wxALL, 4);
+	top->Add(sendBox, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
-	logText_ = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+	// Automation: a switch, a summary and Edit... for each list.
+	auto* autoRow = new wxBoxSizer(wxHORIZONTAL);
+	auto automation = [&](const wxString& label, const char* key, wxCheckBox*& check, wxStaticText*& info, bool periodicPage) {
+		check = new wxCheckBox(panel, wxID_ANY, label);
+		check->SetValue(AppSettings::getBool(key, true));
+		check->Bind(wxEVT_CHECKBOX, [this, key](wxCommandEvent& e) {
+			AppSettings::setBool(key, e.IsChecked());
+			applyAutomation();
+		});
+		info = new wxStaticText(panel, wxID_ANY, wxEmptyString);
+		auto* edit = new wxButton(panel, wxID_ANY, tr(UVT::EDIT_BTN), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+		edit->Bind(wxEVT_BUTTON, [this, periodicPage](wxCommandEvent&) { onEditAutomation(periodicPage); });
+		autoRow->Add(check, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 4);
+		autoRow->Add(info, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
+		autoRow->Add(edit, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 24);
+	};
+	automation(tr(UVT::AUTO_REPLIES_SWITCH), "automation.autoReplies", autoRepliesOn_, autoRepliesInfo_, false);
+	automation(tr(UVT::PERIODIC_SWITCH), "automation.periodic", periodicOn_, periodicInfo_, true);
+	top->Add(autoRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+
+	// Serial console above, application log below.
+	auto* splitter = new wxSplitterWindow(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_LIVE_UPDATE | wxSP_3DSASH);
+	splitter->SetMinimumPaneSize(FromDIP(60));
+	splitter->SetSashGravity(0.7);
+	const wxFont mono(9, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+
+	auto* consolePanel = new wxPanel(splitter);
+	auto* consoleSizer = new wxBoxSizer(wxVERTICAL);
+	auto* consoleBar = new wxBoxSizer(wxHORIZONTAL);
+	consoleBar->Add(new wxStaticText(consolePanel, wxID_ANY, tr(UVT::CONSOLE_LABEL)), 0, wxALIGN_CENTER_VERTICAL);
+	consoleBar->AddStretchSpacer();
+	auto option = [&](const wxString& label, const char* key, bool fallback) {
+		auto* c = new wxCheckBox(consolePanel, wxID_ANY, label);
+		c->SetValue(AppSettings::getBool(key, fallback));
+		c->Bind(wxEVT_CHECKBOX, [key](wxCommandEvent& e) { AppSettings::setBool(key, e.IsChecked()); });
+		consoleBar->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 12);
+		return c;
+	};
+	consoleTime_ = option(tr(UVT::CONSOLE_TIMESTAMPS), "console.time", true);
+	consoleHex_ = option(tr(UVT::CONSOLE_SHOW_HEX), "console.hex", true);
+	consoleFollow_ = option(tr(UVT::CONSOLE_FOLLOW), "console.follow", true);
+	auto* clearConsole = new wxButton(consolePanel, wxID_ANY, tr(UVT::CLEAR_BTN), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	clearConsole->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { console_->Clear(); });
+	consoleBar->Add(clearConsole, 0, wxALIGN_CENTER_VERTICAL);
+	consoleSizer->Add(consoleBar, 0, wxEXPAND | wxBOTTOM, 2);
+	console_ = new wxTextCtrl(consolePanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 		wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH2);
-	logText_->SetFont(wxFont(9, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-	top->Add(logText_, 1, wxEXPAND | wxLEFT | wxRIGHT, 8);
+	console_->SetFont(mono);
+	consoleSizer->Add(console_, 1, wxEXPAND);
+	consolePanel->SetSizer(consoleSizer);
 
-	auto* clear = new wxButton(panel, wxID_ANY, tr(UVT::CLEAR_LOG_BTN));
+	auto* logPanel = new wxPanel(splitter);
+	auto* logSizer = new wxBoxSizer(wxVERTICAL);
+	auto* logBar = new wxBoxSizer(wxHORIZONTAL);
+	logBar->Add(new wxStaticText(logPanel, wxID_ANY, tr(UVT::LOG_VIEW_LABEL)), 0, wxALIGN_CENTER_VERTICAL);
+	logBar->AddStretchSpacer();
+	auto* clear = new wxButton(logPanel, wxID_ANY, tr(UVT::CLEAR_LOG_BTN), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	clear->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { logText_->Clear(); });
-	top->Add(clear, 0, wxALIGN_RIGHT | wxALL, 8);
+	logBar->Add(clear, 0, wxALIGN_CENTER_VERTICAL);
+	logSizer->Add(logBar, 0, wxEXPAND | wxTOP | wxBOTTOM, 2);
+	logText_ = new wxTextCtrl(logPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+		wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH2);
+	logText_->SetFont(mono);
+	logSizer->Add(logText_, 1, wxEXPAND);
+	logPanel->SetSizer(logSizer);
+
+	splitter->SplitHorizontally(consolePanel, logPanel, -FromDIP(140));
+	top->Add(splitter, 1, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
 	panel->SetSizer(top);
+	updateAutomationSummary();
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -166,6 +267,7 @@ void MainWindow::updatePortControls() {
 	portText_->SetLabel(config_.isValid() ? wxString::FromUTF8(config_.describe()) : tr(UVT::PORT_NOT_SET));
 	portButton_->SetLabel(open ? tr(UVT::CLOSE_PORT_BTN) : tr(UVT::OPEN_PORT_BTN));
 	portButton_->Enable(config_.isValid());
+	sendEntry_->Enable(open);
 	sendButton_->Enable(open);
 	SetStatusText(open ? wxString::Format(tr(UVT::STATUSBAR_PORT_OPEN_FMT), wxString::FromUTF8(config_.describe()))
 		: tr(UVT::STATUSBAR_PORT_CLOSED), 1);
@@ -179,12 +281,15 @@ void MainWindow::openPort() {
 			tr(UVT::ERROR_TITLE), wxOK | wxICON_ERROR, this);
 		return;
 	}
-	worker_->start();
+	// A received message ends when the line is quiet for the inter-byte timeout (at least 5 ms).
+	monitor_->start((std::max)(static_cast<int>(config_.interByteTimeoutMs), 5));
+	applyAutomation();
 	recordEvent("port", "opened " + config_.describe());
 }
 
 void MainWindow::closePort() {
-	worker_->stop(); // aborts a transaction in progress, joins the thread
+	stopPeriodic();
+	monitor_->stop(); // joins the thread; queued messages are dropped
 	link_.close();
 	recordEvent("port", "closed " + config_.port);
 }
@@ -206,31 +311,139 @@ void MainWindow::onSerialSettings(wxCommandEvent&) {
 }
 
 void MainWindow::onSend(wxCommandEvent&) {
-	if (!link_.isOpen()) {
+	if (!monitor_->isRunning()) {
 		wxMessageBox(tr(UVT::SEND_NOT_OPEN), tr(UVT::ERROR_TITLE), wxOK | wxICON_INFORMATION, this);
 		return;
 	}
-	const auto parsed = Utils::Hex::parseBytes(sendText_->GetValue().utf8_string());
-	if (!parsed || parsed->empty()) {
-		wxMessageBox(tr(UVT::SEND_BAD_HEX), tr(UVT::ERROR_TITLE), wxOK | wxICON_INFORMATION, this);
+	std::vector<uint8_t> bytes;
+	if (!sendEntry_->GetBytes(bytes) || bytes.empty()) return;
+	if (!monitor_->send(bytes)) printTraffic(Utils::Time::nowEpochMs(), tr(UVT::CONSOLE_TX), kErrorColour, bytes, tr(UVT::CONSOLE_QUEUE_FULL));
+}
+
+// ------------------------------------------------------------------------------------------------
+// Serial console
+// ------------------------------------------------------------------------------------------------
+
+void MainWindow::printTraffic(uint64_t epochMs, const wxString& label, const wxColour& colour, const std::vector<uint8_t>& bytes, const wxString& note) {
+	std::vector<Utils::Gui::ColouredText> pieces;
+	if (consoleTime_->GetValue()) pieces.push_back({ wxString::FromUTF8(Utils::Time::toString(epochMs).substr(11)) + "  ", kTimeColour });
+	pieces.push_back({ wxString::Format("%s (%d)  ", label, static_cast<int>(bytes.size())), colour });
+	pieces.push_back({ wxString::FromUTF8(SerialData::display(bytes)), wxColour() });
+	if (consoleHex_->GetValue() && !bytes.empty()) pieces.push_back({ "   | " + wxString::FromUTF8(Utils::Hex::bytesToString(bytes)), kTimeColour });
+	if (!note.empty()) pieces.push_back({ "   " + note, kErrorColour });
+	pieces.push_back({ "\n", wxColour() });
+	Utils::Gui::appendToConsole(console_, pieces, kMaxConsoleLines, consoleFollow_->GetValue());
+}
+
+void MainWindow::onSerialEvents(std::vector<SerialMonitor::Event>& events) {
+	using Kind = SerialMonitor::Kind;
+	std::optional<Database::Transaction> transaction; // one write for the whole batch
+	if (db_.isOpen()) transaction.emplace(db_);
+	for (const SerialMonitor::Event& e : events) {
+		switch (e.kind) {
+		case Kind::Received:
+			printTraffic(e.epochMs, tr(UVT::CONSOLE_RX), kRxColour, e.bytes);
+			recordEvent("rx", Utils::Hex::bytesToString(e.bytes));
+			break;
+		case Kind::Sent:
+			printTraffic(e.epochMs, tr(UVT::CONSOLE_TX), kTxColour, e.bytes);
+			recordEvent("tx", Utils::Hex::bytesToString(e.bytes));
+			break;
+		case Kind::AutoReply:
+			printTraffic(e.epochMs, wxString::Format(tr(UVT::CONSOLE_AUTO_REPLY_FMT), wxString::FromUTF8(e.source)), kAutoReplyColour, e.bytes);
+			recordEvent("tx-auto", Utils::Hex::bytesToString(e.bytes));
+			break;
+		case Kind::Periodic:
+			printTraffic(e.epochMs, wxString::Format(tr(UVT::CONSOLE_PERIODIC_FMT), wxString::FromUTF8(e.source)), kPeriodicColour, e.bytes);
+			recordEvent("tx-periodic", Utils::Hex::bytesToString(e.bytes));
+			break;
+		case Kind::Error:
+			if (e.bytes.empty()) // an auto reply that could not be built
+				printTraffic(e.epochMs, tr(UVT::CONSOLE_TX), kErrorColour, e.bytes, wxString::Format(tr(UVT::CONSOLE_REPLY_FAILED_FMT), wxString::FromUTF8(e.source)));
+			else
+				printTraffic(e.epochMs, tr(UVT::CONSOLE_TX), kErrorColour, e.bytes, wxString::Format(tr(UVT::CONSOLE_WRITE_FAILED_FMT), SerialLink::resultName(e.result)));
+			break;
+		}
+	}
+	if (transaction) transaction->commit();
+}
+
+// ------------------------------------------------------------------------------------------------
+// Auto replies and periodic messages
+// ------------------------------------------------------------------------------------------------
+
+void MainWindow::loadAutomation() {
+	autoReplies_.clear();
+	periodic_.clear();
+	const int replies = AppSettings::getInt("autoReply.count", 0);
+	for (int i = 0; i < replies; ++i)
+		if (auto r = SerialData::autoReplyFromString(AppSettings::getString("autoReply." + std::to_string(i)))) autoReplies_.push_back(*r);
+	const int periodic = AppSettings::getInt("periodic.count", 0);
+	for (int i = 0; i < periodic; ++i)
+		if (auto p = SerialData::periodicFromString(AppSettings::getString("periodic." + std::to_string(i)))) periodic_.push_back(*p);
+}
+
+void MainWindow::saveAutomation() {
+	AppSettings::setInt("autoReply.count", static_cast<int>(autoReplies_.size()));
+	for (size_t i = 0; i < autoReplies_.size(); ++i) AppSettings::set("autoReply." + std::to_string(i), SerialData::toString(autoReplies_[i]));
+	AppSettings::setInt("periodic.count", static_cast<int>(periodic_.size()));
+	for (size_t i = 0; i < periodic_.size(); ++i) AppSettings::set("periodic." + std::to_string(i), SerialData::toString(periodic_[i]));
+}
+
+void MainWindow::updateAutomationSummary() {
+	auto summary = [](wxStaticText* info, auto const& list) {
+		int enabled = 0;
+		for (const auto& item : list) enabled += item.enabled ? 1 : 0;
+		info->SetLabel(wxString::Format(tr(UVT::AUTOMATION_COUNT_FMT), enabled, static_cast<int>(list.size())));
+	};
+	summary(autoRepliesInfo_, autoReplies_);
+	summary(periodicInfo_, periodic_);
+	Layout();
+}
+
+void MainWindow::onEditAutomation(bool periodicPage) {
+	AutomationDialog dlg(this, autoReplies_, periodic_, periodicPage ? AutomationDialog::Page::Periodic : AutomationDialog::Page::AutoReplies);
+	if (dlg.ShowModal() != wxID_OK) return;
+	autoReplies_ = dlg.autoReplies();
+	periodic_ = dlg.periodic();
+	saveAutomation();
+	updateAutomationSummary();
+	applyAutomation();
+}
+
+void MainWindow::stopPeriodic() {
+	for (auto& run : periodicRuns_) run->timer->Stop();
+	periodicRuns_.clear();
+}
+
+void MainWindow::applyAutomation() {
+	if (!monitor_->isRunning()) return; // applied when the port opens
+	monitor_->setAutoReplies(autoRepliesOn_->GetValue() ? autoReplies_ : std::vector<SerialData::AutoReplyRule>());
+	stopPeriodic();
+	if (!periodicOn_->GetValue()) return;
+	const uint64_t now = Utils::Time::nowMonotonicMs();
+	for (const SerialData::PeriodicMessage& p : periodic_) {
+		if (!p.enabled) continue;
+		auto run = std::make_unique<PeriodicRun>();
+		run->name = p.name;
+		run->generator = SerialData::MessageGenerator(p.message);
+		run->generator.restart(now);
+		PeriodicRun* raw = run.get();
+		run->timer = std::make_unique<FunctionTimer>([this, raw] { sendPeriodic(*raw); });
+		run->timer->Start((std::max)(p.periodMs, 10));
+		periodicRuns_.push_back(std::move(run));
+	}
+}
+
+void MainWindow::sendPeriodic(PeriodicRun& run) {
+	const SerialData::BuildResult r = run.generator.next(Utils::Time::nowMonotonicMs());
+	if (!r.ok() || r.bytes.empty()) {
+		run.timer->Stop(); // would fail every time: report once
+		printTraffic(Utils::Time::nowEpochMs(), tr(UVT::CONSOLE_TX), kErrorColour, {}, wxString::Format(tr(UVT::CONSOLE_PERIODIC_FAILED_FMT), wxString::FromUTF8(run.name)));
 		return;
 	}
-	const std::vector<uint8_t>& bytes = *parsed;
-	Log::info("TX: " + Utils::Hex::bytesToString(bytes));
-	SerialWorker::Job job;
-	job.request = bytes;
-	job.timeoutMs = 1000;
-	// No FrameComplete: the reply ends when the line goes quiet. A real protocol passes its framing
-	// here, e.g. [](const auto& rx) { return rx.size() >= 3 ? size_t(4 + rx[2]) : size_t(0); }.
-	job.done = [this](SerialLink::Result result, const std::vector<uint8_t>& reply) {
-		// Runs on the GUI thread (see SerialWorker) - windows may be used directly here.
-		const std::string text = std::string(SerialLink::resultName(result)) + (reply.empty() ? "" : ": " + Utils::Hex::bytesToString(reply));
-		Log::info("RX " + text);
-		recordEvent("rx", text);
-		SetStatusText(wxString::Format(tr(UVT::REPLY_FMT), SerialLink::resultName(result), wxString::FromUTF8(Utils::Hex::bytesToString(reply))), 0);
-	};
-	worker_->submit(std::move(job));
-	recordEvent("tx", Utils::Hex::bytesToString(bytes));
+	if (!monitor_->send(r.bytes, SerialMonitor::Kind::Periodic, run.name))
+		printTraffic(Utils::Time::nowEpochMs(), tr(UVT::CONSOLE_TX), kErrorColour, r.bytes, tr(UVT::CONSOLE_QUEUE_FULL));
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -380,8 +593,11 @@ void MainWindow::onAbout(wxCommandEvent&) {
 
 void MainWindow::onClose(wxCloseEvent& event) {
 	logTimer_.Stop();
-	if (worker_) worker_->stop();
+	stopPeriodic();
+	if (monitor_) monitor_->stop();
 	link_.close();
+	AppSettings::set("send.format", SerialData::formatKey(sendEntry_->GetFormat()));
+	AppSettings::set("send.text", sendEntry_->GetText().utf8_string());
 	recordEvent("app", "closed");
 	db_.close();
 	event.Skip(); // default handling destroys the window
