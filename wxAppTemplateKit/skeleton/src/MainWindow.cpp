@@ -267,8 +267,8 @@ void MainWindow::updatePortControls() {
 	portText_->SetLabel(config_.isValid() ? wxString::FromUTF8(config_.describe()) : tr(UVT::PORT_NOT_SET));
 	portButton_->SetLabel(open ? tr(UVT::CLOSE_PORT_BTN) : tr(UVT::OPEN_PORT_BTN));
 	portButton_->Enable(config_.isValid());
-	sendEntry_->Enable(open);
-	sendButton_->Enable(open);
+	DataEntry::SetEnabledRepainting(sendEntry_, open); // repaints behind its labels (see there)
+	DataEntry::SetEnabledRepainting(sendButton_, open);
 	SetStatusText(open ? wxString::Format(tr(UVT::STATUSBAR_PORT_OPEN_FMT), wxString::FromUTF8(config_.describe()))
 		: tr(UVT::STATUSBAR_PORT_CLOSED), 1);
 	Layout();

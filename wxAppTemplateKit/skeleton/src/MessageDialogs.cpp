@@ -219,8 +219,8 @@ void CounterDialog::refresh() {
 	if (width_->GetMax() != maxWidth) width_->SetRange(1, maxWidth);
 	const bool binary = encoding == CounterEncoding::Binary;
 	unit_->SetLabel(binary ? wxString::Format(tr(UVT::COUNTER_UNIT_BYTES_FMT), width_->GetValue() * 8) : tr(UVT::COUNTER_UNIT_CHARACTERS));
-	bigEndian_->Enable(binary && width_->GetValue() > 1);
-	littleEndian_->Enable(binary && width_->GetValue() > 1);
+	DataEntry::SetEnabledRepainting(bigEndian_, binary && width_->GetValue() > 1);
+	DataEntry::SetEnabledRepainting(littleEndian_, binary && width_->GetValue() > 1);
 
 	const int w = width_->GetValue();
 	const int first = index_->GetValue();
@@ -385,16 +385,16 @@ bool ChecksumDialog::read(ChecksumSpec& k) const {
 
 void ChecksumDialog::refresh() {
 	const bool on = enabled_->GetValue();
-	for (wxWindow* w : std::initializer_list<wxWindow*>{ type_, atEnd_, allBytes_, except_, bytes_, bigEndian_, littleEndian_ }) w->Enable(on);
-	insertAt_->Enable(on && !atEnd_->GetValue());
-	excluded_->Enable(on && except_->GetValue());
+	for (wxWindow* w : std::initializer_list<wxWindow*>{ type_, atEnd_, allBytes_, except_, bytes_, bigEndian_, littleEndian_ }) DataEntry::SetEnabledRepainting(w, on);
+	DataEntry::SetEnabledRepainting(insertAt_, on && !atEnd_->GetValue());
+	DataEntry::SetEnabledRepainting(excluded_, on && except_->GetValue());
 	const ChecksumInfo& info = checksumTypes()[static_cast<size_t>((std::max)(type_->GetSelection(), 0))];
 	bytesOf_->SetLabel(wxString::Format(tr(UVT::CHECKSUM_BYTES_OF_FMT), info.bytes));
 	const bool part = on && bytes_->GetValue() < info.bytes;
-	lower_->Enable(part);
-	upper_->Enable(part);
-	bigEndian_->Enable(on && bytes_->GetValue() > 1);
-	littleEndian_->Enable(on && bytes_->GetValue() > 1);
+	DataEntry::SetEnabledRepainting(lower_, part);
+	DataEntry::SetEnabledRepainting(upper_, part);
+	DataEntry::SetEnabledRepainting(bigEndian_, on && bytes_->GetValue() > 1);
+	DataEntry::SetEnabledRepainting(littleEndian_, on && bytes_->GetValue() > 1);
 
 	ChecksumSpec k;
 	wxString text;

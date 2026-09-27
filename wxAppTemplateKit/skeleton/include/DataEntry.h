@@ -74,6 +74,16 @@ public:
 	/*! \brief The translated name of a notation ("Hex", "ASCII", "Mixed"). */
 	static wxString FormatName(SerialData::DataFormat format);
 
+	/*!
+	 * \brief Enables or disables window (and everything in it) and repaints the parent behind it.
+	 *
+	 * On Windows, labels (static texts, check boxes, radio buttons) have a transparent background:
+	 * when only the control is redrawn after Enable(), the grey disabled text is drawn over the
+	 * previous text and the two look overlapped. Repainting that area of the parent clears it first.
+	 * Does nothing if the state does not change (no flicker when called on every keystroke).
+	 */
+	static void SetEnabledRepainting(wxWindow* window, bool enable);
+
 private:
 	void setFormatConverting(SerialData::DataFormat to);
 	void onChar(wxKeyEvent& event);

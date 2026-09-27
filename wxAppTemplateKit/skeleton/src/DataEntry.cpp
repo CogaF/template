@@ -78,6 +78,13 @@ wxString DataEntry::ErrorText(SerialData::ParseError error) {
 	}
 }
 
+void DataEntry::SetEnabledRepainting(wxWindow* window, bool enable) {
+	if (!window || window->IsThisEnabled() == enable) return;
+	window->Enable(enable);
+	if (wxWindow* parent = window->GetParent()) parent->RefreshRect(window->GetRect(), true); // erase, then the children
+	else window->Refresh();
+}
+
 wxString DataEntry::GetText() const { return text_->GetValue(); }
 
 void DataEntry::SetData(DataFormat format, const wxString& text) {

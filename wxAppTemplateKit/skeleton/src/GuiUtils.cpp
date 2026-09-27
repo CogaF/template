@@ -57,7 +57,12 @@ void setInteractiveEnabled(wxWindow* root, bool enabled, wxWindowID keepId) {
 		if (wxDynamicCast(child, wxButton) || wxDynamicCast(child, wxTextCtrl) || wxDynamicCast(child, wxSpinCtrl) ||
 			wxDynamicCast(child, wxSpinCtrlDouble) || wxDynamicCast(child, wxChoice) || wxDynamicCast(child, wxCheckBox) ||
 			wxDynamicCast(child, wxComboBox) || wxDynamicCast(child, wxRadioButton) || wxDynamicCast(child, wxSlider)) {
-			child->Enable(enabled);
+			if (child->IsThisEnabled() != enabled) {
+				child->Enable(enabled);
+				// Labels have a transparent background on Windows: repaint the parent behind the control,
+				// or the disabled text is drawn over the previous one and looks doubled.
+				root->RefreshRect(child->GetRect(), true);
+			}
 		}
 		setInteractiveEnabled(child, enabled, keepId);
 	}
