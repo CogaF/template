@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <wx/colour.h>
 #include <wx/string.h>
 #include <wx/window.h>
@@ -78,6 +80,17 @@ namespace Utils::Gui {
 	 * not jump. Painting is frozen during the operation.
 	 */
 	void appendToConsole(wxTextCtrl* console, const wxString& text, int maxLines, bool followNewest = true);
+
+	/*! \brief A piece of console text with its colour (an invalid colour = the console's own). */
+	struct ColouredText {
+		wxString text;   /*!< the text */
+		wxColour colour; /*!< its colour */
+	};
+	/*!
+	 * \brief As appendToConsole() above, with each piece in its own colour. The console needs the
+	 * wxTE_RICH2 style for the colours to show (on Windows).
+	 */
+	void appendToConsole(wxTextCtrl* console, const std::vector<ColouredText>& pieces, int maxLines, bool followNewest = true);
 	/*! \brief Moves the view of console to its last line. */
 	void scrollToEnd(wxTextCtrl* console);
 

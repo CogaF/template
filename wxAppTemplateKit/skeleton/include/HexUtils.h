@@ -218,6 +218,30 @@ namespace Utils::Checksum {
 	uint16_t crc16CcittFalse(const uint8_t* data, size_t size);
 	/*! \brief CRC-32 (IEEE 802.3, as zip/Ethernet; poly 0xEDB88320 reflected). */
 	uint32_t crc32(const uint8_t* data, size_t size);
+	/*! \brief Sum of all bytes, modulo 65536. */
+	uint16_t sum16(const uint8_t* data, size_t size);
+	/*! \brief CRC-8 (CRC-8/SMBUS: poly 0x07, init 0x00, not reflected). */
+	uint8_t crc8(const uint8_t* data, size_t size);
+	/*! \brief CRC-8/MAXIM (Dallas 1-Wire: poly 0x31, init 0x00, reflected). */
+	uint8_t crc8Maxim(const uint8_t* data, size_t size);
+	/*! \brief CRC-16/ARC (also "CRC-16", "CRC-16/IBM": poly 0x8005, init 0x0000, reflected). */
+	uint16_t crc16Arc(const uint8_t* data, size_t size);
+	/*! \brief CRC-16/XMODEM (poly 0x1021, init 0x0000, not reflected). */
+	uint16_t crc16Xmodem(const uint8_t* data, size_t size);
+	/*! \brief CRC-32C (Castagnoli, as iSCSI/SCTP: poly 0x1EDC6F41, reflected). */
+	uint32_t crc32c(const uint8_t* data, size_t size);
+
+	/*!
+	 * \brief Any CRC of up to 64 bits in the usual "Rocksoft" description (the one catalogues list).
+	 * \param data    the bytes to cover.
+	 * \param size    number of bytes.
+	 * \param width   CRC width in bits (1-64).
+	 * \param poly    generator polynomial, NOT reflected (e.g. 0x8005), without the top bit.
+	 * \param init    initial register value.
+	 * \param reflect true for reflected input and output (refin = refout = true).
+	 * \param xorOut  value XORed into the final register.
+	 */
+	uint64_t crc(const uint8_t* data, size_t size, int width, uint64_t poly, uint64_t init, bool reflect, uint64_t xorOut);
 
 	/*! \brief xor8() of a whole buffer. */
 	inline uint8_t xor8(const std::vector<uint8_t>& b) { return xor8(b.data(), b.size()); }

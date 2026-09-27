@@ -15,17 +15,13 @@
     <entry key="not set" value="non impostata"/>
     <entry key="Open Port" value="Apri porta"/>
     <entry key="Close Port" value="Chiudi porta"/>
-    <entry key="Send (hex):" value="Invia (esadecimale):"/>
     <entry key="Send" value="Invia"/>
-    <entry key="e.g. 01 03 00 00 00 01" value="es. 01 03 00 00 00 01"/>
     <entry key="Clear Log" value="Svuota log"/>
     <entry key="Ready" value="Pronto"/>
     <entry key="Port open: %s" value="Porta aperta: %s"/>
     <entry key="Port closed" value="Porta chiusa"/>
     <entry key="Cannot open %s:&#10;%s" value="Impossibile aprire %s:&#10;%s"/>
-    <entry key="Write the bytes to send as hexadecimal pairs, e.g. 01 03 00 00." value="Scrivi i byte da inviare come coppie esadecimali, es. 01 03 00 00."/>
     <entry key="Open the port first." value="Apri prima la porta."/>
-    <entry key="Reply (%s): %s" value="Risposta (%s): %s"/>
     <entry key="Error" value="Errore"/>
     <entry key="Serial Port" value="Porta seriale"/>
     <entry key="Port" value="Porta"/>
@@ -69,4 +65,209 @@
     <entry key="Release candidate" value="Release candidate"/>
     <entry key="Final release" value="Versione finale"/>
     <entry key="Version history (newest first):" value="Cronologia versioni (dalla più recente):"/>
+    <entry key="Se&amp;rial" value="Se&amp;riale"/>
+    <entry key="&amp;Auto Replies..." value="Risposte &amp;automatiche..."/>
+    <entry key="&amp;Periodic Messages..." value="Messaggi &amp;periodici..."/>
+    <entry key="&amp;Clear Console" value="&amp;Pulisci console"/>
+    <entry key="Auto replies" value="Risposte automatiche"/>
+    <entry key="Periodic messages" value="Messaggi periodici"/>
+    <entry key="(%d of %d enabled)" value="(%d di %d attivi)"/>
+    <entry key="Serial console (everything received and sent)" value="Console seriale (tutto ciò che è ricevuto e inviato)"/>
+    <entry key="Time" value="Ora"/>
+    <entry key="Hex too" value="Anche esadecimale"/>
+    <entry key="Follow newest" value="Segui gli ultimi"/>
+    <entry key="Clear" value="Pulisci"/>
+    <entry key="Application log" value="Log dell&apos;applicazione"/>
+    <entry key="RX" value="RX"/>
+    <entry key="TX" value="TX"/>
+    <entry key="TX auto &quot;%s&quot;" value="TX auto &quot;%s&quot;"/>
+    <entry key="TX periodic &quot;%s&quot;" value="TX periodico &quot;%s&quot;"/>
+    <entry key="Write failed (%s)." value="Scrittura non riuscita (%s)."/>
+    <entry key="Auto reply &quot;%s&quot; cannot be built - check its text." value="La risposta automatica &quot;%s&quot; non può essere costruita - controlla il suo testo."/>
+    <entry key="Periodic message &quot;%s&quot; cannot be built - check its text. It has been stopped." value="Il messaggio periodico &quot;%s&quot; non può essere costruito - controlla il suo testo. È stato fermato."/>
+    <entry key="Too many messages waiting - this one was not sent." value="Troppi messaggi in attesa - questo non è stato inviato."/>
+    <entry key="Hex" value="Hex"/>
+    <entry key="ASCII" value="ASCII"/>
+    <entry key="Mixed" value="Misto"/>
+    <entry key="Insert character..." value="Inserisci carattere..."/>
+    <entry key="Hex bytes, e.g. 01 03 00 0A - only 0-9 and A-F; the spaces between bytes are added for you." value="Byte esadecimali, es. 01 03 00 0A - solo 0-9 e A-F; gli spazi tra i byte sono aggiunti automaticamente."/>
+    <entry key="Printable ASCII characters only (space to ~). For control bytes use Mixed." value="Solo caratteri ASCII stampabili (da spazio a ~). Per i byte di controllo usa Misto."/>
+    <entry key="Text, and //0x with two hex digits for any byte: OK//0x0D//0x0A (one //0x for each byte)." value="Testo, e //0x con due cifre esadecimali per qualsiasi byte: OK//0x0D//0x0A (un //0x per ogni byte)."/>
+    <entry key="%d byte(s)." value="%d byte."/>
+    <entry key="Character %d: %s" value="Carattere %d: %s"/>
+    <entry key="only hex digits (0-9, A-F) are allowed." value="sono ammesse solo cifre esadecimali (0-9, A-F)."/>
+    <entry key="this byte has only one hex digit - a byte needs two." value="questo byte ha una sola cifra esadecimale - ne servono due."/>
+    <entry key="not a printable ASCII character - use Mixed and //0x for other bytes." value="non è un carattere ASCII stampabile - usa Misto e //0x per gli altri byte."/>
+    <entry key="//0x must be followed by two hex digits, e.g. //0x0D." value="//0x deve essere seguito da due cifre esadecimali, es. //0x0D."/>
+    <entry key="The text cannot be converted - %s" value="Il testo non può essere convertito - %s"/>
+    <entry key="The data contains bytes that are not printable ASCII characters (e.g. CR, LF, 00), which ASCII cannot show.&#10;&#10;Switch to Mixed instead? (No keeps the current notation.)" value="I dati contengono byte che non sono caratteri ASCII stampabili (es. CR, LF, 00), che ASCII non può mostrare.&#10;&#10;Passare invece a Misto? (No mantiene la notazione attuale.)"/>
+    <entry key="Insert Character" value="Inserisci carattere"/>
+    <entry key="Double-click a character to add it and close this table. Right-click to add it and keep the table open." value="Doppio clic su un carattere per aggiungerlo e chiudere la tabella. Clic destro per aggiungerlo e tenere la tabella aperta."/>
+    <entry key="Dec" value="Dec"/>
+    <entry key="Char" value="Car."/>
+    <entry key="Name" value="Nome"/>
+    <entry key="Description" value="Descrizione"/>
+    <entry key="Digit %s" value="Cifra %s"/>
+    <entry key="Capital letter %s" value="Lettera maiuscola %s"/>
+    <entry key="Small letter %s" value="Lettera minuscola %s"/>
+    <entry key="Not ASCII (shown as its Latin-1 character)" value="Non ASCII (mostrato come carattere Latin-1)"/>
+    <entry key="Add, keep open" value="Aggiungi, tieni aperto"/>
+    <entry key="Add %s and keep this table open" value="Aggiungi %s e tieni aperta la tabella"/>
+    <entry key="Added: %s" value="Aggiunti: %s"/>
+    <entry key="Close" value="Chiudi"/>
+    <entry key="Add..." value="Aggiungi..."/>
+    <entry key="Edit..." value="Modifica..."/>
+    <entry key="Duplicate" value="Duplica"/>
+    <entry key="Remove" value="Rimuovi"/>
+    <entry key="Remove &quot;%s&quot;?" value="Rimuovere &quot;%s&quot;?"/>
+    <entry key="Name:" value="Nome:"/>
+    <entry key="Enabled" value="Attivo"/>
+    <entry key="&quot;%s&quot; is not a valid number." value="&quot;%s&quot; non è un numero valido."/>
+    <entry key="Byte order:" value="Ordine dei byte:"/>
+    <entry key="Big-endian (most significant byte first)" value="Big-endian (prima il byte più significativo)"/>
+    <entry key="Little-endian (least significant byte first)" value="Little-endian (prima il byte meno significativo)"/>
+    <entry key="big-endian" value="big-endian"/>
+    <entry key="little-endian" value="little-endian"/>
+    <entry key="Incrementing Value" value="Valore incrementale"/>
+    <entry key="Written as:" value="Scritto come:"/>
+    <entry key="Binary number" value="Numero binario"/>
+    <entry key="ASCII decimal digits" value="Cifre decimali ASCII"/>
+    <entry key="ASCII hex digits" value="Cifre esadecimali ASCII"/>
+    <entry key="Size:" value="Dimensione:"/>
+    <entry key="bytes (%d bits)" value="byte (%d bit)"/>
+    <entry key="characters" value="caratteri"/>
+    <entry key="Starts at byte index:" value="Inizia all&apos;indice di byte:"/>
+    <entry key="%d-bit value, %d byte(s): from byte %d to byte %d (both included)." value="Valore a %d bit, %d byte: dal byte %d al byte %d (entrambi inclusi)."/>
+    <entry key="%d character(s): from byte %d to byte %d (both included)." value="%d caratteri: dal byte %d al byte %d (entrambi inclusi)."/>
+    <entry key="The message is %d byte(s) long now: it is extended with zero bytes." value="Il messaggio ora è lungo %d byte: viene esteso con byte a zero."/>
+    <entry key="Big-endian is the default: Modbus and most binary protocols send numbers this way. (The serial line sends the bits of each byte least significant first, but the order of the bytes is set by the protocol.)" value="Big-endian è il predefinito: Modbus e la maggior parte dei protocolli binari inviano i numeri così. (La linea seriale invia i bit di ogni byte dal meno significativo, ma l&apos;ordine dei byte è stabilito dal protocollo.)"/>
+    <entry key="Start value:" value="Valore iniziale:"/>
+    <entry key="End value:" value="Valore finale:"/>
+    <entry key="Step:" value="Passo:"/>
+    <entry key="decimal, or hex as 0x1F" value="decimale, o esadecimale come 0x1F"/>
+    <entry key="Advances:" value="Avanza di:"/>
+    <entry key="step(s)" value="passi"/>
+    <entry key="per message sent" value="per messaggio inviato"/>
+    <entry key="per second" value="al secondo"/>
+    <entry key="Values: %s never beyond %s, then again from the start value." value="Valori: %s mai oltre %s, poi di nuovo dal valore iniziale."/>
+    <entry key="Largest value for this size: %s (%s)." value="Valore massimo per questa dimensione: %s (%s)."/>
+    <entry key="Bytes %d-%d (%s): %s to %s, step %s, %s" value="Byte %d-%d (%s): da %s a %s, passo %s, %s"/>
+    <entry key="%s step(s) per message sent" value="%s passi per messaggio inviato"/>
+    <entry key="one step every %s messages sent" value="un passo ogni %s messaggi inviati"/>
+    <entry key="%s step(s) per second" value="%s passi al secondo"/>
+    <entry key="one step every %s seconds" value="un passo ogni %s secondi"/>
+    <entry key="The size is out of range for this kind of value." value="La dimensione è fuori dall&apos;intervallo per questo tipo di valore."/>
+    <entry key="The start and end values must fit in the chosen size: at most %s (%s)." value="I valori iniziale e finale devono stare nella dimensione scelta: al massimo %s (%s)."/>
+    <entry key="The step cannot be 0." value="Il passo non può essere 0."/>
+    <entry key="The step must go from the start value towards the end value (negative when the end is below the start)." value="Il passo deve andare dal valore iniziale verso quello finale (negativo quando il finale è minore dell&apos;iniziale)."/>
+    <entry key="The number of steps must be a number greater than 0 (e.g. 1, 0.5, 0.1)." value="Il numero di passi deve essere un numero maggiore di 0 (es. 1, 0.5, 0.1)."/>
+    <entry key="Checksum" value="Checksum"/>
+    <entry key="Add a checksum to the message" value="Aggiungi un checksum al messaggio"/>
+    <entry key="Type:" value="Tipo:"/>
+    <entry key="%s - %d byte(s)" value="%s - %d byte"/>
+    <entry key="Insert at index:" value="Inserisci all&apos;indice:"/>
+    <entry key="at the end (follows the length of the message)" value="alla fine (segue la lunghezza del messaggio)"/>
+    <entry key="0 = before the first byte, %d = after the last one." value="0 = prima del primo byte, %d = dopo l&apos;ultimo."/>
+    <entry key="Calculated on:" value="Calcolato su:"/>
+    <entry key="all the bytes" value="tutti i byte"/>
+    <entry key="all the bytes except the indexes:" value="tutti i byte tranne gli indici:"/>
+    <entry key="e.g. 0, 5-7 (0 = first byte)" value="es. 0, 5-7 (0 = primo byte)"/>
+    <entry key="Bytes to send:" value="Byte da inviare:"/>
+    <entry key="of %d" value="di %d"/>
+    <entry key="lower part (least significant bytes)" value="parte bassa (byte meno significativi)"/>
+    <entry key="upper part (most significant bytes)" value="parte alta (byte più significativi)"/>
+    <entry key="Checksum of the current message: %s - sent as %s at index %d." value="Checksum del messaggio attuale: %s - inviato come %s all&apos;indice %d."/>
+    <entry key="Write the excluded indexes as numbers and ranges separated by commas, e.g. 0, 5-7." value="Scrivi gli indici esclusi come numeri e intervalli separati da virgole, es. 0, 5-7."/>
+    <entry key="none" value="nessuno"/>
+    <entry key="%s, %d byte(s) at %s" value="%s, %d byte a %s"/>
+    <entry key="the end" value="la fine"/>
+    <entry key="index %d" value="indice %d"/>
+    <entry key="excluding %s" value="esclusi %s"/>
+    <entry key="Incrementing values (written over the message bytes):" value="Valori incrementali (scritti sopra i byte del messaggio):"/>
+    <entry key="Checksum:" value="Checksum:"/>
+    <entry key="Checksum..." value="Checksum..."/>
+    <entry key="Preview of the first messages (one second apart):" value="Anteprima dei primi messaggi (a un secondo di distanza):"/>
+    <entry key="#%d (%d bytes):" value="#%d (%d byte):"/>
+    <entry key="Write the message to send." value="Scrivi il messaggio da inviare."/>
+    <entry key="Auto Reply" value="Risposta automatica"/>
+    <entry key="When these bytes are received" value="Quando si ricevono questi byte"/>
+    <entry key="Reply with" value="Rispondi con"/>
+    <entry key="Delay before replying (ms):" value="Attesa prima di rispondere (ms):"/>
+    <entry key="Write the bytes to recognise." value="Scrivi i byte da riconoscere."/>
+    <entry key="Periodic Message" value="Messaggio periodico"/>
+    <entry key="Send every (ms):" value="Invia ogni (ms):"/>
+    <entry key="Message" value="Messaggio"/>
+    <entry key="Auto reply %d" value="Risposta automatica %d"/>
+    <entry key="Periodic message %d" value="Messaggio periodico %d"/>
+    <entry key="Auto Replies and Periodic Messages" value="Risposte automatiche e messaggi periodici"/>
+    <entry key="While the port is open, each ticked rule replies as soon as its bytes are received. Double-click to edit." value="Con la porta aperta, ogni regola spuntata risponde appena riceve i suoi byte. Doppio clic per modificare."/>
+    <entry key="While the port is open, each ticked message is sent at its interval. Double-click to edit." value="Con la porta aperta, ogni messaggio spuntato è inviato al suo intervallo. Doppio clic per modificare."/>
+    <entry key="When received" value="Quando si riceve"/>
+    <entry key="Reply" value="Risposta"/>
+    <entry key="Delay (ms)" value="Attesa (ms)"/>
+    <entry key="Every (ms)" value="Ogni (ms)"/>
+    <entry key="Null" value="Nullo"/>
+    <entry key="Start of heading" value="Inizio intestazione"/>
+    <entry key="Start of text" value="Inizio testo"/>
+    <entry key="End of text" value="Fine testo"/>
+    <entry key="End of transmission" value="Fine trasmissione"/>
+    <entry key="Enquiry" value="Richiesta"/>
+    <entry key="Acknowledge" value="Conferma"/>
+    <entry key="Bell" value="Campanello"/>
+    <entry key="Backspace" value="Backspace"/>
+    <entry key="Horizontal tab" value="Tabulazione orizzontale"/>
+    <entry key="Line feed" value="Nuova riga (line feed)"/>
+    <entry key="Vertical tab" value="Tabulazione verticale"/>
+    <entry key="Form feed" value="Nuova pagina"/>
+    <entry key="Carriage return" value="Ritorno carrello"/>
+    <entry key="Shift out" value="Shift out"/>
+    <entry key="Shift in" value="Shift in"/>
+    <entry key="Data link escape" value="Escape del collegamento dati"/>
+    <entry key="Device control 1 (XON)" value="Controllo dispositivo 1 (XON)"/>
+    <entry key="Device control 2" value="Controllo dispositivo 2"/>
+    <entry key="Device control 3 (XOFF)" value="Controllo dispositivo 3 (XOFF)"/>
+    <entry key="Device control 4" value="Controllo dispositivo 4"/>
+    <entry key="Negative acknowledge" value="Conferma negativa"/>
+    <entry key="Synchronous idle" value="Attesa sincrona"/>
+    <entry key="End of transmission block" value="Fine blocco di trasmissione"/>
+    <entry key="End of medium" value="Fine supporto"/>
+    <entry key="Substitute" value="Sostituto"/>
+    <entry key="Escape" value="Escape"/>
+    <entry key="File separator" value="Separatore di file"/>
+    <entry key="Group separator" value="Separatore di gruppo"/>
+    <entry key="Record separator" value="Separatore di record"/>
+    <entry key="Unit separator" value="Separatore di unità"/>
+    <entry key="Delete" value="Cancella"/>
+    <entry key="Exclamation mark" value="Punto esclamativo"/>
+    <entry key="Quotation mark" value="Virgolette"/>
+    <entry key="Number sign" value="Cancelletto"/>
+    <entry key="Dollar sign" value="Dollaro"/>
+    <entry key="Percent sign" value="Percento"/>
+    <entry key="Ampersand" value="E commerciale"/>
+    <entry key="Apostrophe" value="Apostrofo"/>
+    <entry key="Left parenthesis" value="Parentesi tonda aperta"/>
+    <entry key="Right parenthesis" value="Parentesi tonda chiusa"/>
+    <entry key="Asterisk" value="Asterisco"/>
+    <entry key="Plus sign" value="Più"/>
+    <entry key="Comma" value="Virgola"/>
+    <entry key="Hyphen-minus" value="Trattino (meno)"/>
+    <entry key="Full stop" value="Punto"/>
+    <entry key="Slash" value="Barra"/>
+    <entry key="Colon" value="Due punti"/>
+    <entry key="Semicolon" value="Punto e virgola"/>
+    <entry key="Less-than sign" value="Minore di"/>
+    <entry key="Equals sign" value="Uguale"/>
+    <entry key="Greater-than sign" value="Maggiore di"/>
+    <entry key="Question mark" value="Punto interrogativo"/>
+    <entry key="Commercial at" value="Chiocciola"/>
+    <entry key="Left square bracket" value="Parentesi quadra aperta"/>
+    <entry key="Backslash" value="Barra rovesciata"/>
+    <entry key="Right square bracket" value="Parentesi quadra chiusa"/>
+    <entry key="Circumflex accent" value="Accento circonflesso"/>
+    <entry key="Underscore" value="Trattino basso"/>
+    <entry key="Grave accent" value="Accento grave"/>
+    <entry key="Left curly bracket" value="Parentesi graffa aperta"/>
+    <entry key="Vertical bar" value="Barra verticale"/>
+    <entry key="Right curly bracket" value="Parentesi graffa chiusa"/>
+    <entry key="Tilde" value="Tilde"/>
 </translation>

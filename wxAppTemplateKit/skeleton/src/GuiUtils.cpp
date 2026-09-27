@@ -63,40 +63,60 @@ void setInteractiveEnabled(wxWindow* root, bool enabled, wxWindowID keepId) {
 	}
 }
 
-void appendToConsole(wxTextCtrl* console, const wxString& text, int maxLines, bool followNewest) {
-	if (!console) return;
-	console->Freeze();
+namespace {
+	/*! \brief appendToConsole() with the appending done by append(). */
+	template <typename Append>
+	void appendKeepingView(wxTextCtrl* console, Append append, int maxLines, bool followNewest) {
+		if (!console) return;
+		console->Freeze();
 
-	long topPos = 0;
-	const bool haveTop = !followNewest && console->HitTest(wxPoint(3, 3), &topPos) != wxTE_HT_UNKNOWN;
-	long selFrom = 0, selTo = 0;
-	if (!followNewest) console->GetSelection(&selFrom, &selTo);
+		long topPos = 0;
+		const bool haveTop = !followNewest && console->HitTest(wxPoint(3, 3), &topPos) != wxTE_HT_UNKNOWN;
+		long selFrom = 0, selTo = 0;
+		if (!followNewest) console->GetSelection(&selFrom, &selTo);
 
-	console->AppendText(text);
+		append();
 
-	long removedChars = 0;
-	while (console->GetNumberOfLines() > maxLines) {
-		const long lineLength = console->GetLineLength(0);
-		console->Remove(0, lineLength + 1); // +1: the newline too
-		removedChars += lineLength + 1;
-	}
+		long removedChars = 0;
+		while (console->GetNumberOfLines() > maxLines) {
+			const long lineLength = console->GetLineLength(0);
+			console->Remove(0, lineLength + 1); // +1: the newline too
+			removedChars += lineLength + 1;
+		}
 
-	if (followNewest) {
-		scrollToEnd(console);
-	}
-	else {
-		// Selection first (it may scroll the caret into view), then put the view back where it was.
-		console->SetSelection(std::max(0L, selFrom - removedChars), std::max(0L, selTo - removedChars));
-		if (haveTop) {
-			long wantX = 0, wantLine = 0, curPos = 0, curX = 0, curLine = 0;
-			if (console->PositionToXY(std::max(0L, topPos - removedChars), &wantX, &wantLine) &&
-				console->HitTest(wxPoint(3, 3), &curPos) != wxTE_HT_UNKNOWN &&
-				console->PositionToXY(curPos, &curX, &curLine) && wantLine != curLine) {
-				console->ScrollLines(static_cast<int>(wantLine - curLine));
+		if (followNewest) {
+			scrollToEnd(console);
+		}
+		else {
+			// Selection first (it may scroll the caret into view), then put the view back where it was.
+			console->SetSelection(std::max(0L, selFrom - removedChars), std::max(0L, selTo - removedChars));
+			if (haveTop) {
+				long wantX = 0, wantLine = 0, curPos = 0, curX = 0, curLine = 0;
+				if (console->PositionToXY(std::max(0L, topPos - removedChars), &wantX, &wantLine) &&
+					console->HitTest(wxPoint(3, 3), &curPos) != wxTE_HT_UNKNOWN &&
+					console->PositionToXY(curPos, &curX, &curLine) && wantLine != curLine) {
+					console->ScrollLines(static_cast<int>(wantLine - curLine));
+				}
 			}
 		}
+		console->Thaw();
 	}
-	console->Thaw();
+}
+
+void appendToConsole(wxTextCtrl* console, const wxString& text, int maxLines, bool followNewest) {
+	appendKeepingView(console, [&] { console->AppendText(text); }, maxLines, followNewest);
+}
+
+void appendToConsole(wxTextCtrl* console, const std::vector<ColouredText>& pieces, int maxLines, bool followNewest) {
+	if (!console) return;
+	appendKeepingView(console, [&] {
+		const wxColour own = console->GetForegroundColour();
+		for (const ColouredText& piece : pieces) {
+			console->SetDefaultStyle(wxTextAttr(piece.colour.IsOk() ? piece.colour : own));
+			console->AppendText(piece.text);
+		}
+		console->SetDefaultStyle(wxTextAttr(own));
+	}, maxLines, followNewest);
 }
 
 void scrollToEnd(wxTextCtrl* console) {
