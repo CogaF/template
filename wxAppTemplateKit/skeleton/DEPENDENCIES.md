@@ -68,8 +68,8 @@ builds copy the wxWidgets DLLs next to the exe after each build.
 template - even the "static" builds link wxWidgets statically but use the DLL runtime. A computer
 without Visual Studio then needs the **Microsoft Visual C++ Redistributable (x64 or x86)** installed.
 For a single, fully self-contained exe, rebuild wxWidgets (and SQLite and serial) with the static
-runtime (`nmake ... RUNTIME_LIBS=static`; for SQLite `build_all.bat static-crt`, which writes to
-`Builds_StaticCRT\` - use that folder as `VC_SQLITE`) and set *C/C++ → Code
+runtime (`nmake ... RUNTIME_LIBS=static`; for SQLite and serial `build_all.bat static-crt`, which
+writes to `Builds_StaticCRT\` - use those folders as `VC_SQLITE` / `VC_WJWWOOD_SERIAL`) and set *C/C++ → Code
 Generation → Runtime Library* to `/MT` (`/MTd` for Debug) in the project.
 
 ## 4. SQLite
@@ -107,20 +107,28 @@ the exe.
   compiler warning about possible loss of characters);
 - `open()` on a port that is already open reconfigures it with the current settings instead of
   throwing an exception;
-- Visual Studio project updated (toolset v145, C++20).
+- a Visual Studio build of the library as a static library and a DLL, like SQLite3_builder.
 
-Build `visual_studio\visual_studio.sln` (project `serial`, a static library) for Debug and Release,
-x64 and Win32, and arrange the result as:
+```bat
+git clone https://github.com/CogaF/serial.git C:\libs\serial-src
+C:\libs\serial-src\build_all.bat
+xcopy /e /i /y C:\libs\serial-src\Builds C:\libs\serial
+setx VC_WJWWOOD_SERIAL C:\libs\serial
+```
+
+`VC_WJWWOOD_SERIAL` is the folder with the build output (the content of the fork's `Builds\`):
 
 ```
 %VC_WJWWOOD_SERIAL%\include\serial\serial.h
-%VC_WJWWOOD_SERIAL%\x64\Debug\serial.lib     %VC_WJWWOOD_SERIAL%\x64\Release\serial.lib
-%VC_WJWWOOD_SERIAL%\Win32\Debug\serial.lib   %VC_WJWWOOD_SERIAL%\Win32\Release\serial.lib
+%VC_WJWWOOD_SERIAL%\x64\Debug\lib\serial.lib        %VC_WJWWOOD_SERIAL%\x64\Release\lib\serial.lib
+%VC_WJWWOOD_SERIAL%\x64\Debug\dll\serial.dll + .lib  %VC_WJWWOOD_SERIAL%\x64\Release\dll\serial.dll + .lib
+%VC_WJWWOOD_SERIAL%\x86\...                            (the same for Win32)
 ```
 
-Note: the fork's Win32 **Debug** configuration keeps Visual Studio's default output folder
-(`Debug\` at the solution root) - move that `serial.lib` to `Win32\Debug\`, or set its output folder
-to `$(SolutionDir)$(Platform)\$(Configuration)\` like the other configurations.
+The static configurations link `lib\serial.lib`; the DLL configurations define `SERIAL_USE_DLL`, link
+`dll\serial.lib` and copy `serial.dll` next to the exe. The libraries are built without
+whole-program optimization (`/GL`), so they link with the same or any later Visual Studio - a
+library built with `/GL` fails with "C1047: ... created by a different version of the compiler".
 
 The fork currently builds on Windows only: its Unix backend still returns `std::string` from
 `getPort()` while `serial.h` declares `std::wstring`. The template itself does not call `getPort()`.
@@ -130,7 +138,7 @@ The fork currently builds on Windows only: its Unix backend still returns `std::
 | Build | Files next to the exe |
 |---|---|
 | static (Debug, Release) | the exe |
-| DLL (Debug_DLL, Release_DLL) | the exe + the wxWidgets DLLs and `sqlite3.dll` (copied by the build) |
+| DLL (Debug_DLL, Release_DLL) | the exe + the wxWidgets DLLs, `sqlite3.dll` and `serial.dll` (copied by the build) |
 | all | the folder `<App name> data\` with the language files (copied by the build) |
 
 Plus the Visual C++ Redistributable on computers without Visual Studio (see "C runtime" above).

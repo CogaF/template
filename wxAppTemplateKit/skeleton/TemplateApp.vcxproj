@@ -119,8 +119,13 @@
     <SqliteLinkKind Condition="!$(Configuration.EndsWith('_DLL'))">lib</SqliteLinkKind>
     <SqliteIncludeDir Condition="'$(SqliteIncludeDir)'==''">$(VC_SQLITE)\include</SqliteIncludeDir>
     <SqliteLibDir Condition="'$(SqliteLibDir)'==''">$(VC_SQLITE)\$(PlatformShortName)\$(DepConfig)\$(SqliteLinkKind)</SqliteLibDir>
+    <!-- serial (CogaF fork) built with its build_all.bat. VC_WJWWOOD_SERIAL = the folder holding its
+         output (include\, x64\, x86\ - the content of its Builds\ folder): the static library for
+         the static configurations, the DLL (SERIAL_USE_DLL, copied next to the exe) for the _DLL ones. -->
+    <SerialLinkKind Condition="$(Configuration.EndsWith('_DLL'))">dll</SerialLinkKind>
+    <SerialLinkKind Condition="!$(Configuration.EndsWith('_DLL'))">lib</SerialLinkKind>
     <SerialIncludeDir Condition="'$(SerialIncludeDir)'==''">$(VC_WJWWOOD_SERIAL)\include</SerialIncludeDir>
-    <SerialLibDir Condition="'$(SerialLibDir)'==''">$(VC_WJWWOOD_SERIAL)\$(Platform)\$(DepConfig)</SerialLibDir>
+    <SerialLibDir Condition="'$(SerialLibDir)'==''">$(VC_WJWWOOD_SERIAL)\$(PlatformShortName)\$(DepConfig)\$(SerialLinkKind)</SerialLibDir>
   </PropertyGroup>
   <PropertyGroup>
     <TargetName>$(AppExeBaseName)</TargetName>
@@ -160,7 +165,8 @@
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
-if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -199,7 +205,8 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
-if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -209,7 +216,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;WXUSINGDLL;SERIAL_USE_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -235,6 +242,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
 xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
@@ -247,7 +255,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;WXUSINGDLL;SERIAL_USE_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -275,6 +283,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
 xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
@@ -310,7 +319,8 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
-if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -349,7 +359,8 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
-if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"</Command>
+if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -359,7 +370,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;_DEBUG;WXUSINGDLL;SERIAL_USE_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -385,6 +396,7 @@ if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll"
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
 xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
@@ -397,7 +409,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;UNICODE;_UNICODE;NOMINMAX;NDEBUG;WXUSINGDLL;SERIAL_USE_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(SqliteIncludeDir);$(SerialIncludeDir);$(WXWIN)\include;$(WXWIN)\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -425,6 +437,7 @@ xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <Command>if not exist "$(OutDir)$(AppExeBaseName) data\" mkdir "$(OutDir)$(AppExeBaseName) data"
 xcopy /y /d "$(ProjectDir)languages\*.xml" "$(OutDir)$(AppExeBaseName) data\"
 if exist "$(SqliteLibDir)\sqlite3.dll" xcopy /y /d "$(SqliteLibDir)\sqlite3.dll" "$(OutDir)"
+if exist "$(SerialLibDir)\serial.dll" xcopy /y /d "$(SerialLibDir)\serial.dll" "$(OutDir)"
 xcopy /y /d "$(WxLibDir)\wx*.dll" "$(OutDir)"</Command>
       <Message>Copying language files and needed DLLs next to the exe</Message>
     </PostBuildEvent>
