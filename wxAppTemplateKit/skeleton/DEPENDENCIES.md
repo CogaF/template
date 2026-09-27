@@ -33,7 +33,7 @@ environment variables" → Environment Variables → New), or in a Command Promp
 
 ```bat
 setx WXWIN             C:\libs\wxWidgets-3.3.3
-setx VC_SQLITE         C:\libs\sqlite
+setx VC_SQLITE         C:\libs\SQLite3
 setx VC_WJWWOOD_SERIAL C:\libs\serial
 ```
 
@@ -69,7 +69,7 @@ template - even the "static" builds link wxWidgets statically but use the DLL ru
 without Visual Studio then needs the **Microsoft Visual C++ Redistributable (x64 or x86)** installed.
 For a single, fully self-contained exe, rebuild wxWidgets (and SQLite and serial) with the static
 runtime (`nmake ... RUNTIME_LIBS=static`; for SQLite `build_all.bat static-crt`, which writes to
-`Builds_StaticCRT\` - point `SqliteIncludeDir`/`SqliteLibDir` there) and set *C/C++ → Code
+`Builds_StaticCRT\` - use that folder as `VC_SQLITE`) and set *C/C++ → Code
 Generation → Runtime Library* to `/MT` (`/MTd` for Debug) in the project.
 
 ## 4. SQLite
@@ -80,16 +80,19 @@ that builds the SQLite amalgamation as a static library and a DLL, Debug and Rel
 ```bat
 git clone https://github.com/CogaF/SQLite3_builder.git C:\libs\SQLite3_builder
 C:\libs\SQLite3_builder\build_all.bat
-setx VC_SQLITE C:\libs\SQLite3_builder
+xcopy /e /i /y C:\libs\SQLite3_builder\Builds C:\libs\SQLite3
+setx VC_SQLITE C:\libs\SQLite3
 ```
 
-Layout it produces (`x86` is the Win32 platform):
+`VC_SQLITE` is the folder with the build output - the content of SQLite3_builder's `Builds\` (copied
+as above, or `VC_SQLITE` set to `...\SQLite3_builder\Builds` directly). Expected layout (`x86` is the
+Win32 platform):
 
 ```
-%VC_SQLITE%\Builds\include\sqlite3.h
-%VC_SQLITE%\Builds\x64\Debug\lib\sqlite3.lib        %VC_SQLITE%\Builds\x64\Release\lib\sqlite3.lib
-%VC_SQLITE%\Builds\x64\Debug\dll\sqlite3.dll + .lib  %VC_SQLITE%\Builds\x64\Release\dll\sqlite3.dll + .lib
-%VC_SQLITE%\Builds\x86\...                            (the same for Win32)
+%VC_SQLITE%\include\sqlite3.h
+%VC_SQLITE%\x64\Debug\lib\sqlite3.lib        %VC_SQLITE%\x64\Release\lib\sqlite3.lib
+%VC_SQLITE%\x64\Debug\dll\sqlite3.dll + .lib  %VC_SQLITE%\x64\Release\dll\sqlite3.dll + .lib
+%VC_SQLITE%\x86\...                            (the same for Win32)
 ```
 
 The static configurations (Debug, Release) link `lib\sqlite3.lib`; the DLL configurations

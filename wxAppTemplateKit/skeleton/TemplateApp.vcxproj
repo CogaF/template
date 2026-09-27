@@ -112,12 +112,13 @@
     <WxLibDir Condition="'$(WxLibDir)'==''">$(WXWIN)\lib\vc$(WxArchSuffix)_$(WxLinkKind)</WxLibDir>
     <DepConfig Condition="$(Configuration.StartsWith('Debug'))">Debug</DepConfig>
     <DepConfig Condition="!$(Configuration.StartsWith('Debug'))">Release</DepConfig>
-    <!-- SQLite from SQLite3_builder (VC_SQLITE = its folder): the static library for the static
+    <!-- SQLite built with SQLite3_builder. VC_SQLITE = the folder holding its output (include\, x64\,
+         x86\ - the content of its Builds\ folder, or a copy of it): the static library for the static
          configurations, the DLL (copied next to the exe after the build) for the _DLL ones. -->
     <SqliteLinkKind Condition="$(Configuration.EndsWith('_DLL'))">dll</SqliteLinkKind>
     <SqliteLinkKind Condition="!$(Configuration.EndsWith('_DLL'))">lib</SqliteLinkKind>
-    <SqliteIncludeDir Condition="'$(SqliteIncludeDir)'==''">$(VC_SQLITE)\Builds\include</SqliteIncludeDir>
-    <SqliteLibDir Condition="'$(SqliteLibDir)'==''">$(VC_SQLITE)\Builds\$(PlatformShortName)\$(DepConfig)\$(SqliteLinkKind)</SqliteLibDir>
+    <SqliteIncludeDir Condition="'$(SqliteIncludeDir)'==''">$(VC_SQLITE)\include</SqliteIncludeDir>
+    <SqliteLibDir Condition="'$(SqliteLibDir)'==''">$(VC_SQLITE)\$(PlatformShortName)\$(DepConfig)\$(SqliteLinkKind)</SqliteLibDir>
     <SerialIncludeDir Condition="'$(SerialIncludeDir)'==''">$(VC_WJWWOOD_SERIAL)\include</SerialIncludeDir>
     <SerialLibDir Condition="'$(SerialLibDir)'==''">$(VC_WJWWOOD_SERIAL)\$(Platform)\$(DepConfig)</SerialLibDir>
   </PropertyGroup>
