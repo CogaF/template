@@ -10,6 +10,7 @@
  */
 
 #include "MainWindow.h"
+#include "AboutDialog.h"
 #include "AppInfo.h"
 #include "AppSettings.h"
 #include "AutomationDialog.h"
@@ -44,9 +45,6 @@
 #include <wx/stdpaths.h>
 #include <wx/textctrl.h>
 #include <wx/utils.h>
-#include <wx/version.h>
-
-#include "sqlite3.h"
 
 namespace {
 	enum MenuId {
@@ -584,11 +582,8 @@ void MainWindow::onVersionInfo(wxCommandEvent&) {
 }
 
 void MainWindow::onAbout(wxCommandEvent&) {
-	const wxString name = wxString::FromUTF8(AppInfo::kName);
-	wxMessageBox(wxString::Format(tr(UVT::ABOUT_BODY_FMT), name, wxString::FromUTF8(GetCompactVersion()),
-		wxString::FromUTF8(AppInfo::kCopyright), wxString::FromUTF8(AppInfo::kLicense),
-		wxString(wxVERSION_NUM_DOT_STRING), wxString::FromUTF8(sqlite3_libversion())),
-		wxString::Format(tr(UVT::ABOUT_TITLE_FMT), name), wxOK | wxICON_INFORMATION, this);
+	AboutDialog dialog(this, db_.isOpen() ? wxString(DataDir::file("events.db").wstring()) : wxString());
+	dialog.ShowModal();
 }
 
 void MainWindow::onClose(wxCloseEvent& event) {

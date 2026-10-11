@@ -58,7 +58,52 @@
     <entry key="Log Level" value="Livello log"/>
     <entry key="Write to the log messages up to:" value="Scrivi nel log i messaggi fino a:"/>
     <entry key="About %s" value="Informazioni su %s"/>
-    <entry key="%s&#10;Version %s&#10;&#10;%s&#10;Licensed under the %s.&#10;&#10;Built with wxWidgets %s, SQLite %s and serial (wjwwood/serial, CogaF fork)." value="%s&#10;Versione %s&#10;&#10;%s&#10;Distribuito con licenza %s.&#10;&#10;Realizzato con wxWidgets %s, SQLite %s e serial (wjwwood/serial, fork CogaF)."/>
+    <entry key="About" value="Informazioni"/>
+    <entry key="Developer" value="Sviluppatore"/>
+    <entry key="Dependencies" value="Dipendenze"/>
+    <entry key="Changes" value="Modifiche"/>
+    <entry key="System" value="Sistema"/>
+    <entry key="Version %s   -   built %s" value="Versione %s   -   compilata %s"/>
+    <entry key="Author:" value="Autore:"/>
+    <entry key="Contact:" value="Contatto:"/>
+    <entry key="Project page:" value="Pagina del progetto:"/>
+    <entry key="Report a problem:" value="Segnala un problema:"/>
+    <entry key="Copyright:" value="Copyright:"/>
+    <entry key="License:" value="Licenza:"/>
+    <entry key="Data folder:" value="Cartella dati:"/>
+    <entry key="Executable folder:" value="Cartella del programma:"/>
+    <entry key="What it does:&#10;  - a serial terminal: Hex / ASCII / Mixed notation, auto replies, periodic messages, counters and checksums;&#10;  - a live log, settings, an SQLite event database;&#10;  - light and dark themes, run-time translations, semantic versioning with build numbers." value="Cosa fa:&#10;  - un terminale seriale: notazione Hex / ASCII / Mista, risposte automatiche, messaggi periodici, contatori e checksum;&#10;  - un log in tempo reale, impostazioni, un database SQLite degli eventi;&#10;  - temi chiaro e scuro, traduzioni a run-time, versioni semantiche con numero di build."/>
+    <entry key="Made with the wxAppTemplate kit, developed with the help of Claude (Anthropic)." value="Realizzato con il kit wxAppTemplate, sviluppato con l'aiuto di Claude (Anthropic)."/>
+    <entry key="Design and development." value="Progettazione e sviluppo."/>
+    <entry key="E-mail:" value="E-mail:"/>
+    <entry key="Web page:" value="Pagina web:"/>
+    <entry key="This project:" value="Questo progetto:"/>
+    <entry key="Issues:" value="Segnalazioni:"/>
+    <entry key="Support" value="Assistenza"/>
+    <entry key="&quot;Report a problem&quot; opens your mail program with a message already containing the version and the details of this PC (System page). Describe what happened and send it." value="&quot;Segnala un problema&quot; apre il programma di posta con un messaggio che contiene già la versione e i dettagli di questo PC (pagina Sistema). Descrivi cosa è successo e invialo."/>
+    <entry key="&quot;Report a problem&quot; opens the issues page. Describe what happened and paste the details of this PC (System page, Copy to clipboard)." value="&quot;Segnala un problema&quot; apre la pagina delle segnalazioni. Descrivi cosa è successo e incolla i dettagli di questo PC (pagina Sistema, Copia negli appunti)."/>
+    <entry key="No contact or issues page is set for this application (AppInfo.h)." value="Per questa applicazione non è impostato nessun contatto né pagina delle segnalazioni (AppInfo.h)."/>
+    <entry key="Report a problem..." value="Segnala un problema..."/>
+    <entry key="problem report" value="segnalazione di un problema"/>
+    <entry key="Describe the problem here:" value="Descrivi qui il problema:"/>
+    <entry key="System details" value="Dettagli del sistema"/>
+    <entry key="Libraries used by this application, with their versions. Every name and licence is a link." value="Librerie usate da questa applicazione, con le loro versioni. Ogni nome e licenza è un collegamento."/>
+    <entry key="Library" value="Libreria"/>
+    <entry key="Version" value="Versione"/>
+    <entry key="Licence" value="Licenza"/>
+    <entry key="Used for" value="Usata per"/>
+    <entry key="%s (compiled), %s (running)" value="%s (compilata), %s (in uso)"/>
+    <entry key="linked in (CogaF fork)" value="inclusa nel programma (fork CogaF)"/>
+    <entry key="DLL next to the exe (CogaF fork)" value="DLL accanto al programma (fork CogaF)"/>
+    <entry key="Public domain" value="Pubblico dominio"/>
+    <entry key="MSVC %d.%d" value="MSVC %d.%d"/>
+    <entry key="windows, controls, events" value="finestre, controlli, eventi"/>
+    <entry key="the event database" value="il database degli eventi"/>
+    <entry key="serial ports" value="porte seriali"/>
+    <entry key="C and C++ standard library" value="libreria standard C e C++"/>
+    <entry key="Copy to clipboard" value="Copia negli appunti"/>
+    <entry key="A starting point for Windows desktop applications in C++20 with wxWidgets, SQLite and serial ports: logging, settings, translations, themes, versioning, a serial terminal and a database, ready to become your own project." value="Un punto di partenza per applicazioni desktop Windows in C++20 con wxWidgets, SQLite e porte seriali: log, impostazioni, traduzioni, temi, versioni, un terminale seriale e un database, pronto a diventare il tuo progetto."/>
+    <entry key="Why TEMP over LATE? Because every project starts out TEMPorary and is delivered a little LATE. Run NewProject.bat now - before it is too late 🙂" value="Perché TEMP sopra LATE? Perché ogni progetto nasce TEMPoraneo e arriva sempre un po’ in ritardo (LATE). Lancia NewProject.bat adesso, prima che sia troppo tardi 🙂"/>
     <entry key="Version Information" value="Informazioni versione"/>
     <entry key="Version: %s&#10;Build: %d (%s)&#10;Build type: %s&#10;Source (git): %s&#10;Data folder: %s" value="Versione: %s&#10;Build: %d (%s)&#10;Tipo di build: %s&#10;Sorgente (git): %s&#10;Cartella dati: %s"/>
     <entry key="Development (Debug)" value="Sviluppo (Debug)"/>

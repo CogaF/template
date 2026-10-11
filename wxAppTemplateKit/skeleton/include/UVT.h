@@ -156,10 +156,102 @@ namespace UVT {
 	// --- About / version ---
 	/*! \brief Format string: about title. */
 	inline const wxString ABOUT_TITLE_FMT = "About %s";
-	/*! \brief Format string: about body. */
-	inline const wxString ABOUT_BODY_FMT =
-		"%s\nVersion %s\n\n%s\nLicensed under the %s.\n\n"
-		"Built with wxWidgets %s, SQLite %s and serial (wjwwood/serial, CogaF fork).";
+	/*! \brief About page tab. */
+	inline const wxString ABOUT_PAGE_ABOUT = "About";
+	/*! \brief Developer page tab. */
+	inline const wxString ABOUT_PAGE_DEVELOPER = "Developer";
+	/*! \brief Dependencies page tab. */
+	inline const wxString ABOUT_PAGE_DEPENDENCIES = "Dependencies";
+	/*! \brief Changes (version history) page tab. */
+	inline const wxString ABOUT_PAGE_CHANGES = "Changes";
+	/*! \brief System page tab. */
+	inline const wxString ABOUT_PAGE_SYSTEM = "System";
+	/*! \brief Format string: version and build date under the name. */
+	inline const wxString ABOUT_VERSION_FMT = "Version %s   -   built %s";
+	/*! \brief Label: author. */
+	inline const wxString ABOUT_AUTHOR = "Author:";
+	/*! \brief Label: contact e-mail. */
+	inline const wxString ABOUT_CONTACT = "Contact:";
+	/*! \brief Label: project page. */
+	inline const wxString ABOUT_PROJECT_PAGE = "Project page:";
+	/*! \brief Label: where to report a problem. */
+	inline const wxString ABOUT_REPORT_PROBLEM = "Report a problem:";
+	/*! \brief Label: copyright. */
+	inline const wxString ABOUT_COPYRIGHT = "Copyright:";
+	/*! \brief Label: licence. */
+	inline const wxString ABOUT_LICENSE = "License:";
+	/*! \brief Label: data folder. */
+	inline const wxString ABOUT_DATA_FOLDER = "Data folder:";
+	/*! \brief Label: executable folder. */
+	inline const wxString ABOUT_EXE_FOLDER = "Executable folder:";
+	/*! \brief Text: what the skeleton gives (About page). */
+	inline const wxString ABOUT_FEATURES =
+		"What it does:\n"
+		"  - a serial terminal: Hex / ASCII / Mixed notation, auto replies, periodic messages, counters and checksums;\n"
+		"  - a live log, settings, an SQLite event database;\n"
+		"  - light and dark themes, run-time translations, semantic versioning with build numbers.";
+	/*! \brief Text: made with the kit. */
+	inline const wxString ABOUT_MADE_WITH = "Made with the wxAppTemplate kit, developed with the help of Claude (Anthropic).";
+	/*! \brief Text: the developer's role (Developer page). */
+	inline const wxString ABOUT_DEVELOPER_ROLE = "Design and development.";
+	/*! \brief Label: e-mail. */
+	inline const wxString ABOUT_EMAIL = "E-mail:";
+	/*! \brief Label: the developer's page. */
+	inline const wxString ABOUT_DEVELOPER_PAGE = "Web page:";
+	/*! \brief Label: this project. */
+	inline const wxString ABOUT_THIS_PROJECT = "This project:";
+	/*! \brief Label: issues. */
+	inline const wxString ABOUT_ISSUES = "Issues:";
+	/*! \brief Section title: support. */
+	inline const wxString ABOUT_SUPPORT = "Support";
+	/*! \brief Text: how to report a problem by e-mail. */
+	inline const wxString ABOUT_SUPPORT_MAIL_TEXT =
+		"\"Report a problem\" opens your mail program with a message already containing the version and the details "
+		"of this PC (System page). Describe what happened and send it.";
+	/*! \brief Text: how to report a problem on the issues page. */
+	inline const wxString ABOUT_SUPPORT_ISSUES_TEXT =
+		"\"Report a problem\" opens the issues page. Describe what happened and paste the details of this PC "
+		"(System page, Copy to clipboard).";
+	/*! \brief Text: no contact is configured. */
+	inline const wxString ABOUT_SUPPORT_NONE_TEXT = "No contact or issues page is set for this application (AppInfo.h).";
+	/*! \brief Button: report a problem. */
+	inline const wxString ABOUT_REPORT_BUTTON = "Report a problem...";
+	/*! \brief Mail subject suffix. */
+	inline const wxString ABOUT_MAIL_SUBJECT = "problem report";
+	/*! \brief Mail body start. */
+	inline const wxString ABOUT_MAIL_BODY = "Describe the problem here:";
+	/*! \brief Mail section title. */
+	inline const wxString ABOUT_MAIL_DETAILS = "System details";
+	/*! \brief Text: dependencies page intro. */
+	inline const wxString ABOUT_LIBRARIES_INTRO = "Libraries used by this application, with their versions. Every name and licence is a link.";
+	/*! \brief Column: library. */
+	inline const wxString DEP_LIBRARY = "Library";
+	/*! \brief Column: version. */
+	inline const wxString DEP_VERSION = "Version";
+	/*! \brief Column: licence. */
+	inline const wxString DEP_LICENCE = "Licence";
+	/*! \brief Column: what it is used for. */
+	inline const wxString DEP_USED_FOR = "Used for";
+	/*! \brief Format string: compiled / running wxWidgets versions. */
+	inline const wxString DEP_WX_VERSION_FMT = "%s (compiled), %s (running)";
+	/*! \brief Text: serial library linked into the exe. */
+	inline const wxString DEP_SERIAL_STATIC = "linked in (CogaF fork)";
+	/*! \brief Text: serial library used as a DLL. */
+	inline const wxString DEP_SERIAL_DLL = "DLL next to the exe (CogaF fork)";
+	/*! \brief Text: public domain. */
+	inline const wxString DEP_PUBLIC_DOMAIN = "Public domain";
+	/*! \brief Format string: compiler version. */
+	inline const wxString DEP_COMPILER_FMT = "MSVC %d.%d";
+	/*! \brief Use: wxWidgets. */
+	inline const wxString DEP_USE_WX = "windows, controls, events";
+	/*! \brief Use: SQLite. */
+	inline const wxString DEP_USE_SQLITE = "the event database";
+	/*! \brief Use: serial. */
+	inline const wxString DEP_USE_SERIAL = "serial ports";
+	/*! \brief Use: C++ runtime. */
+	inline const wxString DEP_USE_RUNTIME = "C and C++ standard library";
+	/*! \brief Button: copy to clipboard. */
+	inline const wxString ABOUT_COPY_CLIPBOARD = "Copy to clipboard";
 	/*! \brief Window title: version info. */
 	inline const wxString VERSION_INFO_TITLE = "Version Information";
 	/*! \brief Format string: version info. */

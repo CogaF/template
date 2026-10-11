@@ -16,11 +16,29 @@ Copyright (C) 2026 Fation Coga - [GNU LGPL v3.0 or later](LICENSE.md).
    - project identifier (e.g. `ReactorControl`) - `.sln` / `.vcxproj` name;
    - destination folder;
    - builds: any of the 8 below (`x64`, `win32`, `static`, `dll`, `debug`, `release`, `all`, or numbers);
-   - copyright holder; optionally a git repository with a first commit.
+   - About window: copyright holder, author, contact e-mail, one-line description;
+   - icon text: two words, green over red (proposed from the name: `Reactor Control` -> REACTOR / CONTROL);
+   - git: a repository with a first commit - branch name, extra patterns to ignore, your commit
+     identity if git does not know it yet (stored in that repository only);
+   - GitHub: publish it on **your** account - repository name (or `owner/name` for an organisation),
+     private / public / internal, description, homepage, topics, issues, wiki.
 3. Open the generated `.sln` and build. The exe is in `Builds\<Platform>\<Configuration>\`.
 
 Without questions: `powershell -ExecutionPolicy Bypass -File NewProject.ps1 -Name "Reactor Control"
--Builds "x64,win32" -Destination C:\dev\ReactorControl -Yes`.
+-Builds "x64,win32" -Destination C:\dev\ReactorControl -Yes` (add `-GitHub -Visibility private` to
+publish it, `-NoGit` for no repository; every question has a parameter - see the top of the script).
+
+### Git and GitHub
+
+The script is not tied to the kit's author: every default comes from the PC it runs on (`git config`
+user name and e-mail, the Windows user) and the repository is created with the account signed in there.
+
+- **GitHub CLI** (<https://cli.github.com>, `gh auth login` once): the script shows the account it is
+  signed in with, checks the name is free, creates the repository with your settings and pushes the
+  first commit. The About window then links the repository, its issues and the owner's page.
+- **Without the CLI**: create an empty repository at <https://github.com/new>, give its URL when asked
+  (or `-RemoteUrl`) and the first commit is pushed there with git's own credentials.
+- **Local only**: answer `-` to the URL - the repository stays on the PC (`git push` later).
 
 The `skeleton\` folder is itself a complete project (`TemplateApp.sln`) that builds as it is.
 
@@ -56,7 +74,9 @@ Every build:
 
 | File | What it gives you |
 |---|---|
-| `AppInfo.h` | the application name, data folder name, copyright - in one place |
+| `AppInfo.h` | the application name, data folder, description, author, contact, links, copyright - in one place (filled in by `NewProject`) |
+| `AboutDialog.*` | Help > About on tabs: About (icon, version, description, author, links, licence), Developer ("Report a problem" by e-mail or on the issues page), Dependencies (versions found at run time), Changes, System (copy to clipboard) - empty `AppInfo` fields hide their lines |
+| `art\app.ico`, `art\make-icon.ps1` | the application icon (`appicon` in the `.rc`, set on every window by `App`): two bold words, green over red - the template's is TEMP over LATE; `make-icon.ps1 -Top RCT -Bottom CTRL` draws your own |
 | `Version.h`, `BuildInfo.*` | semantic version + history; build number, git commit, build date; window title `Name (v0.1.0-rc.1b12, 2026-09-26 14:03)` |
 | `DataDir.*` | every file lives in `<exe folder>\<App name> data\` (created on demand) - one folder to back up |
 | `Log.*` | thread-safe log to file + GUI; levels None...Trace; the GUI drains a bounded queue on a timer (never flooded, nothing lost at startup) |
@@ -73,7 +93,7 @@ Every build:
 | `ThreadUtils.h` | `AliveGuard`, `CallLater` (delayed GUI call that is skipped if its window is gone), `WorkerQueue` (background task queue with a GUI-thread continuation) |
 | `StatusLed.*` | coloured status indicator with tooltip, label and click / double-click / right-click events |
 | `SerialConfigDialog.*` | port / baud / format / timeouts dialog |
-| `MainWindow.*`, `App.*` | skeleton window: a small serial terminal (below), live log, event database, theme / language / log level with Restart now · Use now · Save for next start · Cancel, Version Info, About |
+| `MainWindow.*`, `App.*` | skeleton window: a small serial terminal (below), live log, event database, theme / language / log level with Restart now · Use now · Save for next start · Cancel, Version Info, About; the icon on every window |
 
 ## Serial terminal
 
