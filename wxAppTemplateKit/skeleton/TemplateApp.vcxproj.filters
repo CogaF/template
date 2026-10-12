@@ -8,6 +8,7 @@
     <Filter Include="Resource Files"><UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier></Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AboutDialog.cpp"><Filter>Source Files</Filter></ClCompile>
     <ClCompile Include="src\App.cpp"><Filter>Source Files</Filter></ClCompile>
     <ClCompile Include="src\AppSettings.cpp"><Filter>Source Files</Filter></ClCompile>
     <ClCompile Include="src\AsciiTableDialog.cpp"><Filter>Serial Terminal</Filter></ClCompile>
@@ -34,6 +35,7 @@
     <ClCompile Include="src\TextUtils.cpp"><Filter>Utils</Filter></ClCompile>
     <ClCompile Include="src\Theme.cpp"><Filter>Source Files</Filter></ClCompile>
     <ClCompile Include="src\TimeUtils.cpp"><Filter>Utils</Filter></ClCompile>
+    <ClInclude Include="include\AboutDialog.h"><Filter>Header Files</Filter></ClInclude>
     <ClInclude Include="include\App.h"><Filter>Header Files</Filter></ClInclude>
     <ClInclude Include="include\AppInfo.h"><Filter>Header Files</Filter></ClInclude>
     <ClInclude Include="include\AppSettings.h"><Filter>Header Files</Filter></ClInclude>
@@ -69,5 +71,7 @@
     <ResourceCompile Include="TemplateApp.rc"><Filter>Resource Files</Filter></ResourceCompile>
     <None Include="languages\language-it.xml"><Filter>Resource Files</Filter></None>
     <None Include="Doxyfile"><Filter>Resource Files</Filter></None>
+    <None Include="art\make-icon.ps1"><Filter>Resource Files</Filter></None>
+    <Image Include="art\app.ico"><Filter>Resource Files</Filter></Image>
   </ItemGroup>
 </Project>

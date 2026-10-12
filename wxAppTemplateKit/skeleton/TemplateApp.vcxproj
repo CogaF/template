@@ -447,6 +447,7 @@ if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AboutDialog.cpp" />
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\AppSettings.cpp" />
     <ClCompile Include="src\AsciiTableDialog.cpp" />
@@ -475,6 +476,7 @@ if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)"
     <ClCompile Include="src\TimeUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AboutDialog.h" />
     <ClInclude Include="include\App.h" />
     <ClInclude Include="include\AppInfo.h" />
     <ClInclude Include="include\AppSettings.h" />
@@ -512,8 +514,12 @@ if exist "$(WxLibDir)\$(WxDllPattern)" xcopy /y /d "$(WxLibDir)\$(WxDllPattern)"
     <ResourceCompile Include="TemplateApp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="art\app.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="languages\language-it.xml" />
     <None Include="Doxyfile" />
+    <None Include="art\make-icon.ps1" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Build number, git commit and build date -> include\GeneratedBuildInfo.h (gitignored), before

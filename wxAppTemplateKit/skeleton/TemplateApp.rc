@@ -1,8 +1,9 @@
 // Copyright (C) 2026 Fation Coga
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-// Standard wxWidgets resources: the manifest (common controls v6, DPI awareness) and the default
-// icons/cursors. To give the exe its own icon, add a line such as
-//     appicon ICON "app.ico"
-// BEFORE this include (the first icon in the file becomes the exe's icon).
+// Template App.exe resources: the application icon (art\app.ico, made by art\make-icon.ps1 - the
+// template's is "TEMP" over "LATE") and the standard wxWidgets resources (default icons, cursors).
+// "appicon" is the FIRST icon in the file, so Explorer, the taskbar and Alt-Tab show it; App.cpp puts
+// it on every window. Never call it wxICON_AAA: wx.rc already uses that name.
+appicon ICON "art\\app.ico"
 #include "wx/msw/wx.rc"

@@ -19,6 +19,7 @@
 #include "MainWindow.h"
 #include "Theme.h"
 
+#include <wx/iconbndl.h>
 #include <wx/toplevel.h>
 
 wxIMPLEMENT_APP(App);
@@ -48,7 +49,14 @@ int App::OnExit() {
 
 int App::FilterEvent(wxEvent& event) {
 	if (event.GetEventType() == wxEVT_SHOW && static_cast<wxShowEvent&>(event).IsShown()) {
-		if (auto* tlw = wxDynamicCast(event.GetEventObject(), wxTopLevelWindow)) Theme::onWindowShown(tlw);
+		if (auto* tlw = wxDynamicCast(event.GetEventObject(), wxTopLevelWindow)) {
+#ifdef __WXMSW__
+			// The application icon (art\app.ico, "appicon" in the .rc) on every window and dialog.
+			static const wxIconBundle icons("appicon", nullptr);
+			if (tlw->GetIcons().IsEmpty() && icons.IsOk()) tlw->SetIcons(icons);
+#endif
+			Theme::onWindowShown(tlw);
+		}
 	}
 	return wxApp::FilterEvent(event);
 }

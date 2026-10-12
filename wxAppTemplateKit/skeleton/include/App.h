@@ -21,7 +21,7 @@ public:
 	bool OnInit() override;
 	/*! \brief Closes the log file. */
 	int OnExit() override;
-	/*! \brief Sees every event first - used to theme windows shown after a live theme switch. */
+	/*! \brief Sees every event first - gives every window the application icon and themes windows shown after a live theme switch. */
 	int FilterEvent(wxEvent& event) override;
 };
 
