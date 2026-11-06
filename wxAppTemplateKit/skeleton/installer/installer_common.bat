@@ -37,7 +37,8 @@ if not defined VERSION_HEADER ( echo installer_common: VERSION_HEADER not set  &
 if not defined SLN_FILE       ( echo installer_common: SLN_FILE not set        & exit /b 1 )
 if not defined ISS_FILE       ( echo installer_common: ISS_FILE not set        & exit /b 1 )
 
-set "BUILDS=%REPO%\Builds"
+rem Wrapper may have pre-set BUILDS to a non-standard layout (e.g. wxHexLab uses build\winVSC).
+if not defined BUILDS set "BUILDS=%REPO%\Builds"
 set "DOBUILD=0"
 set "ASSUMEYES=0"
 for %%A in (%*) do (
