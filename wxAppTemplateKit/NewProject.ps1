@@ -60,6 +60,13 @@ param(
     [switch]$NoWiki,
     # URL of an existing EMPTY repository to push to, instead of creating one with the GitHub CLI
     [string]$RemoteUrl,
+    # Installer kit: name of the environment variable pointing at the shared installer kit
+    # (asked otherwise; with -Yes: INSTALLER_KIT_DIR, not set, deps folder named as a reminder)
+    [string]$InstallerEnvVar,
+    # The variable already exists on this PC (no question, no setx)
+    [switch]$InstallerEnvVarExists,
+    # Create the variable now with setx (pointing at the project's bundled installer\deps folder)
+    [switch]$SetInstallerEnvVar,
     [switch]$Yes      # accept every default without asking
 )
 
@@ -352,11 +359,48 @@ if ($repoSlug) {
     $devPage = "https://github.com/$repoOwner"
 }
 
+# --- 4b. Installer kit environment variable ---------------------------------------------------------
+# installer\deps holds a copy of the shared installer kit. build_installer.bat and the .iss look first at
+# the folder named by an environment variable (whose name is chosen here), then at the bundled copy.
+Write-Section 'Installer kit'
+$EnvVarName = ''
+$FolderName = ''
+$SetEnvVarNow = $false
+$haveEnvVar = [bool]$InstallerEnvVarExists
+if (-not $InstallerEnvVarExists -and -not $InstallerEnvVar -and -not $Yes) {
+    $haveEnvVar = AskYesNo 'Do you already have an installer-kit env var set?' $false
+}
+function Read-EnvVarName([string]$Question, [string]$Default) {
+    while ($true) {
+        $n = (Ask $Question $Default).Trim()
+        if ($n -match '^[A-Za-z_][A-Za-z0-9_]*$') { return $n }
+        Write-Host '  Use letters, digits and underscores only (not starting with a digit).'
+        if ($Yes) { throw "Invalid environment variable name: $n" }
+    }
+}
+if ($InstallerEnvVar) {
+    if ($InstallerEnvVar -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') { throw "Invalid environment variable name: $InstallerEnvVar" }
+    $EnvVarName = $InstallerEnvVar
+} elseif ($haveEnvVar) {
+    $EnvVarName = Read-EnvVarName 'What is its name? (e.g. COGAF_SHARED_REDIST)' 'COGAF_SHARED_REDIST'
+} else {
+    $EnvVarName = Read-EnvVarName 'What would you like to name it?' 'INSTALLER_KIT_DIR'
+}
+$bundledPath = Join-Path $Destination "installer\deps\$EnvVarName"
+if ($haveEnvVar) {
+    $FolderName = $EnvVarName
+} else {
+    if ($SetInstallerEnvVar) { $SetEnvVarNow = $true }
+    elseif (-not $Yes) { $SetEnvVarNow = AskYesNo "Do you want to set it now, pointing at $bundledPath ?" $false }
+    $FolderName = if ($SetEnvVarNow) { $EnvVarName } else { "set_this_folder_as_env_var_$EnvVarName" }
+}
+
 Write-Section 'Summary'
 Write-Host "Application name : $Name"
 Write-Host "Identifier       : $Identifier"
 Write-Host "Destination      : $Destination"
 Write-Host ("Builds           : " + (($selected | ForEach-Object { "$($_.Config)|$($_.Platform)" }) -join ', '))
+Write-Host "Installer env var: $EnvVarName ($(if ($haveEnvVar) { 'already set' } elseif ($SetEnvVarNow) { 'will be set now with setx' } else { 'not set - see the summary at the end' })), deps folder: installer\deps\$FolderName"
 Write-Host "Copyright        : Copyright (C) $year $Holder"
 Write-Host "Author / contact : $Author$(if ($Contact) { " <$Contact>" })"
 Write-Host "Description      : $Description"
@@ -375,7 +419,7 @@ if (-not $Yes) {
 
 # --- 5. Copy ----------------------------------------------------------------------------------------
 New-Item -ItemType Directory -Force -Path $Destination | Out-Null
-$skip = @('Builds', 'obj', '.vs', 'docs')
+$skip = @('Builds', 'obj', '.vs', 'docs', 'old_installer')
 Get-ChildItem -Force $Skeleton | Where-Object { $skip -notcontains $_.Name } | ForEach-Object {
     Copy-Item -Recurse -Force $_.FullName $Destination
 }
@@ -387,6 +431,33 @@ foreach ($generated in @('BuildCounter.txt', 'include\GeneratedBuildInfo.h')) {
 foreach ($doc in @('COPYING', 'COPYING.LESSER', 'DEPENDENCIES.md')) {
     $src = Join-Path $KitRoot $doc
     if (Test-Path $src) { Copy-Item -Force $src $Destination }
+}
+
+# Installer kit: no old backup, deps subfolder named after the env var choice, names substituted.
+Get-ChildItem -Recurse -Force -Directory $Destination -Filter 'old_installer' | ForEach-Object { Remove-Item -Recurse -Force $_.FullName }
+$depsDir = Join-Path $Destination 'installer\deps'
+$kitPlaceholder = Join-Path $depsDir '__INSTALLER_KIT_FOLDER__'
+if (Test-Path $kitPlaceholder) {
+    if ($FolderName -ne '__INSTALLER_KIT_FOLDER__') { Rename-Item -Path $kitPlaceholder -NewName $FolderName }
+}
+Get-ChildItem -Force -File (Join-Path $Destination 'installer') | Where-Object { $_.Extension -in @('.bat', '.iss') } | ForEach-Object {
+    $bom = Test-HasBom $_.FullName
+    $text = Read-TextFile $_.FullName
+    $new = $text.Replace('__INSTALLER_ENV_VAR__', $EnvVarName).Replace('__INSTALLER_KIT_FOLDER__', $FolderName)
+    if ($new -ne $text) { Write-TextFile $_.FullName $new $bom }
+}
+# The README of the bundle keeps its placeholders as documentation, but names the real folder here.
+$depsReadme = Join-Path $depsDir 'README.md'
+if (Test-Path $depsReadme) {
+    $bom = Test-HasBom $depsReadme
+    $text = Read-TextFile $depsReadme
+    $note = "> **This project:** env var ``$EnvVarName``, bundled folder ``$FolderName``.`n`n"
+    if (-not $text.StartsWith('> **This project:**')) { Write-TextFile $depsReadme ($note + $text) $bom }
+}
+if ($SetEnvVarNow) {
+    $r = Invoke-Quiet 'setx' @($EnvVarName, $bundledPath)
+    if ($r.Code -eq 0) { Write-Host "Environment variable $EnvVarName set to $bundledPath (new terminals see it)." -ForegroundColor Green }
+    else { Write-Host "setx failed ($($r.Output)). Set it yourself: setx $EnvVarName `"$bundledPath`"" -ForegroundColor Yellow; $SetEnvVarNow = $false }
 }
 
 # --- 6. Rename files --------------------------------------------------------------------------------
@@ -537,3 +608,14 @@ if ($makeRepo) {
 Write-Host ''
 Write-Host "Done: $Destination" -ForegroundColor Green
 Write-Host "Open $Identifier.sln in Visual Studio - see DEPENDENCIES.md for WXWIN, VC_SQLITE and VC_WJWWOOD_SERIAL."
+Write-Host ''
+Write-Host "Installer kit    : env var $EnvVarName, bundled copy in installer\deps\$FolderName"
+if ($haveEnvVar) {
+    Write-Host "  You said $EnvVarName already exists: build_installer.bat uses it, and falls back to the bundled copy if it is empty."
+} elseif ($SetEnvVarNow) {
+    Write-Host "  $EnvVarName was set with setx to the bundled folder. Open a NEW terminal / Visual Studio to see it."
+} else {
+    Write-Host "  $EnvVarName is NOT set. The project still builds from the bundled copy. To use a shared kit instead:" -ForegroundColor Yellow
+    Write-Host "    setx $EnvVarName `"<full path of the folder holding installer_common.bat>`""
+    Write-Host "  (the folder installer\deps\$FolderName is named to remind you; see installer\deps\README.md)"
+}

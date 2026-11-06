@@ -12,9 +12,10 @@
 ; The AppId GUID, as one value: used by [Setup] and by the shared previous-install check. Never change it.
 #define AppIdValue "{FD549C3D-5D83-4651-821D-D00C78674D81}"
 #ifndef SharedKitDir
-  #define SharedKitDir GetEnv("COGAF_SHARED_REDIST")
+  #define SharedKitDir GetEnv("__INSTALLER_ENV_VAR__")
   #if SharedKitDir == ""
-    #define SharedKitDir "..\..\win-installer-kit"
+    #pragma message "Env var __INSTALLER_ENV_VAR__ not set, using bundled deps."
+    #define SharedKitDir "deps\__INSTALLER_KIT_FOLDER__"
   #endif
 #endif
 #define AppExe "Template App.exe"
