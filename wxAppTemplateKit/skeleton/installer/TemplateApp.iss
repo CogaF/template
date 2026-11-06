@@ -9,6 +9,14 @@
 ; Builds used: Builds\<x64|Win32>\<Release|Release_DLL>\ (the Visual Studio output folders).
 
 #define AppName "Template App"
+; The AppId GUID, as one value: used by [Setup] and by the shared previous-install check. Never change it.
+#define AppIdValue "{FD549C3D-5D83-4651-821D-D00C78674D81}"
+#ifndef SharedKitDir
+  #define SharedKitDir GetEnv("COGAF_SHARED_REDIST")
+  #if SharedKitDir == ""
+    #define SharedKitDir "..\..\win-installer-kit"
+  #endif
+#endif
 #define AppExe "Template App.exe"
 #define DataFolder "Template App data"
 #ifndef AppVersion
@@ -44,7 +52,7 @@
 
 [Setup]
 ; Never change AppId: it is how a newer installer finds and replaces an installed version.
-AppId={{FD549C3D-5D83-4651-821D-D00C78674D81}
+AppId={{#AppIdValue}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
@@ -61,26 +69,9 @@ LicenseFile={#RepoDir}\LICENSE.md
 SetupIconFile={#RepoDir}\art\app.ico
 OutputDir={#RepoDir}\installer\Output
 OutputBaseFilename=Template App {#AppVersion} setup
-Compression=lzma2/max
-SolidCompression=yes
-WizardStyle=modern
-; 64 bit where Windows can run it (also ARM64 Windows 11, emulated), else 32 bit - if a Win32 build is bundled.
-ArchitecturesAllowed=x86compatible x64compatible
-ArchitecturesInstallIn64BitMode=x64compatible
-; Dual-mode install per user request (no admin / no fallback problem):
-;   - "lowest" is the default so the installer runs without an admin prompt;
-;   - PrivilegesRequiredOverridesAllowed=dialog shows the operator a chooser on launch:
-;       * "Install for all users (admin, Program Files)" - requires UAC elevation
-;       * "Install for me only (no admin, %LocalAppData%\Programs)" - no elevation
-;   - PrivilegesRequiredOverridesAllowed=commandline also lets a batch pass /ALLUSERS or /CURRENTUSER
-;     non-interactively (used by build_installer.bat for CI / scripted installs).
-; Non-admin mode writes into a per-user folder that the operator already owns, so no permission
-; stunts are needed; the installer still shows a folder-picker, so "install anywhere I can write"
-; is the natural fallback when admin is refused.
-PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog commandline
-MinVersion=6.1sp1
-CloseApplications=yes
+; Privileges, compression, wizard style, architectures, MinVersion and CloseApplications come from the shared kit
+; (privilege dialog: admin for all users or per user; /D overrides in shared_setup.iss).
+#include "{#SharedKitDir}\shared_setup.iss"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -222,3 +213,7 @@ begin
   Need := Need + StrToInt64Def(Carried, 0);
   Result := Have < Need;
 end;
+
+#ifndef NoPrevInstallCheck
+  #include "{#SharedKitDir}\shared_install_wizard.iss"
+#endif
