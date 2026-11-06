@@ -117,7 +117,9 @@ for /f tokens^=2^ delims^=^" %%V in ('findstr /r /c:"#define APP_VERSION_PRERELE
 set "VERSION=%VMAJ%.%VMIN%.%VPAT%"
 if not "%VPRE%"=="" set "VERSION=%VERSION%-%VPRE%"
 set "COMMIT=0"
-for /f %%C in ('git -C "%REPO%" rev-list --count HEAD 2^>nul') do set "COMMIT=%%C"
+rem Per every CogaF project's CLAUDE.md: cmt = commit count - 1 (first commit of master = cmt.0).
+for /f %%C in ('git -C "%REPO%" rev-list --count HEAD 2^>nul') do set /a COMMIT=%%C-1
+if %COMMIT% LSS 0 set "COMMIT=0"
 echo %APP_NAME% %VERSION% (cmt.%COMMIT%)
 
 rem --- VC redist lookup. Priority:
