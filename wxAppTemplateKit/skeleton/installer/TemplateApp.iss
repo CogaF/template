@@ -72,7 +72,7 @@ OutputDir={#RepoDir}\installer\Output
 OutputBaseFilename=Template App {#AppVersion} setup
 ; Privileges, compression, wizard style, architectures, MinVersion and CloseApplications come from the shared kit
 ; (privilege dialog: admin for all users or per user; /D overrides in shared_setup.iss).
-#include "{#SharedKitDir}\shared_setup.iss"
+#include SharedKitDir + "\shared_setup.iss"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -216,5 +216,5 @@ begin
 end;
 
 #ifndef NoPrevInstallCheck
-  #include "{#SharedKitDir}\shared_install_wizard.iss"
+  #include SharedKitDir + "\shared_install_wizard.iss"
 #endif
