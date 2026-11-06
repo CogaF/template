@@ -143,3 +143,18 @@ The fork currently builds on Windows only: its Unix backend still returns `std::
 
 Plus the Visual C++ Redistributable on computers without Visual Studio (see "C runtime" above).
 Everything the application writes (settings, log, databases) goes into `<App name> data\`.
+
+## 7. Installer
+
+`installer/` (in the skeleton, so every project made from it has it) builds ONE `setup.exe` with
+Inno Setup 6: x64 build, static or dynamic (DLL) variant chosen on a wizard page, Visual C++
+runtime installed when missing, per-user or all-users install.
+
+- `build_installer.bat` - thin wrapper: sets the project names, then calls `installer_common.bat`
+  (the shared copy from `COGAF_SHARED_REDIST` or `..\..\redist` if present, else the local copy
+  after asking).
+- `installer_common.bat` - the shared driver (reads the version from `include\Version.h`,
+  downloads the VC runtime into `installer\redist\`, runs `ISCC`).
+- `<Identifier>.iss` - the Inno Setup script; its `AppId` is fresh per project and must never change.
+- Usage: `installer\build_installer.bat` (packages the existing `Builds\`), `... build` (builds
+  Release and Release_DLL first), `... -y` (never prompt). Output: `installer\Output\`.

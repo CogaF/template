@@ -1,0 +1,3 @@
+# The Visual C++ runtime is downloaded by build_installer.bat (not committed)
+redist/
+Output/
